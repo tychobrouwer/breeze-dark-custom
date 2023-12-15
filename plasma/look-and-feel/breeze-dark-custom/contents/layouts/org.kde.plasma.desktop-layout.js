@@ -56,7 +56,7 @@ var layout = {
                         "/General": {
                             "groupingStrategy": "0",
                             "highlightWindows": "false",
-                            "launchers": "applications:systemsettings.desktop,preferred://filemanager,applications:thorium-browser.desktop,applications:org.kde.konsole.desktop,applications:Mailspring.desktop,applications:com.ktechpit.whatsie.desktop,applications:code.desktop,applications:org.kde.kate.desktop,applications:gimp.desktop,applications:com.github.iwalton3.jellyfin-media-player.desktop,applications:spotify.desktop,applications:steam.desktop,applications:net.lutris.Lutris.desktop,applications:minecraft-launcher.desktop",
+                            "launchers": "applications:systemsettings.desktop,preferred://filemanager,applications:thorium-browser.desktop,applications:org.kde.konsole.desktop,applications:Mailspring.desktop,applications:com.ktechpit.whatsie.desktop,applications:code.desktop,applications:org.kde.kate.desktop,applications:gimp.desktop,applications:com.github.iwalton3.jellyfin-media-player.desktop,applications:spotify-launcher.desktop,applications:steam.desktop,applications:net.lutris.Lutris.desktop,applications:minecraft-launcher.desktop",
                             "wheelEnabled": "false"
                         }
                     },
