@@ -1,6 +1,6 @@
 [SddmGreeterTheme]
-Name=my-theme
-Description=my-theme
+Name=breeze-dark-custom
+Description=breeze-dark-custom
 Author=KDE Visual Design Group
 Copyright=(c) 2014, David Edmundson
 License=CC-BY-SA
@@ -12,5 +12,5 @@ MainScript=Main.qml
 ConfigFile=theme.conf
 TranslationsDirectory=translations
 Email=plasma-devel@kde.org
-Theme-Id=my-theme
+Theme-Id=breeze-dark-custom
 Theme-API=2.0
