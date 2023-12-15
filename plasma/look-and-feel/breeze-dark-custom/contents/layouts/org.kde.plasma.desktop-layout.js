@@ -20,7 +20,7 @@ var layout = {
                     "DialogWidth": "720"
                 },
                 "/Wallpaper/org.kde.image/General": {
-                    "Image": "/usr/share/wallpapers/my-theme/content/images/background.jpg",
+                    "Image": "/usr/share/wallpapers/breeze-dark-custom/content/images/background.jpg",
                     "SlidePaths": "/home/tychob/.local/share/wallpapers/,/usr/share/wallpapers/"
                 }
             },
