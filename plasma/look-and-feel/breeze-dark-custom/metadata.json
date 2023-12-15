@@ -1,0 +1,20 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "plasma-devel@kde.org"
+            }
+        ],
+        "Category": "",
+        "Description": "Breeze Dark by the KDE VDG Customized",
+        "Id": "breeze-dark-custom",
+        "License": "GPLv2+",
+        "Name": "Breeze Dark Custom",
+        "ServiceTypes": [
+            "Plasma/LookAndFeel"
+        ],
+        "Version": "2.0",
+        "Website": "https://www.kde.org"
+    },
+    "X-Plasma-MainScript": "defaults"
+}
