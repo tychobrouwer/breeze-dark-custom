@@ -96,30 +96,30 @@ function createFavoriteActions(i18n, favoriteModel, favoriteId) {
             var linkedToThisActivity =
                 !(linkedActivities.indexOf(activityId) === -1);
 
-            actions.push({
-                text      : activityName,
-                checkable : true,
-                checked   : linkedToThisActivity && !linkedToAllActivities,
+            // actions.push({
+            //     text      : activityName,
+            //     checkable : true,
+            //     checked   : linkedToThisActivity && !linkedToAllActivities,
 
-                actionId :
-                    // If we are on all activities, and the user clicks just one
-                    // specific activity, unlink from everything else
-                    linkedToAllActivities ? "_kicker_favorite_set_to_activity" :
+            //     actionId :
+            //         // If we are on all activities, and the user clicks just one
+            //         // specific activity, unlink from everything else
+            //         linkedToAllActivities ? "_kicker_favorite_set_to_activity" :
 
-                    // If we are linked to the current activity, just unlink from
-                    // that single one
-                    linkedToThisActivity ? "_kicker_favorite_remove_from_activity" :
+            //         // If we are linked to the current activity, just unlink from
+            //         // that single one
+            //         linkedToThisActivity ? "_kicker_favorite_remove_from_activity" :
 
-                    // Otherwise, link to this activity, but do not unlink from
-                    // other ones
-                    "_kicker_favorite_add_to_activity",
+            //         // Otherwise, link to this activity, but do not unlink from
+            //         // other ones
+            //         "_kicker_favorite_add_to_activity",
 
-                actionArgument : {
-                    favoriteModel    : favoriteModel,
-                    favoriteId       : favoriteId,
-                    favoriteActivity : activityId
-                }
-            });
+            //     actionArgument : {
+            //         favoriteModel    : favoriteModel,
+            //         favoriteId       : favoriteId,
+            //         favoriteActivity : activityId
+            //     }
+            // });
         };
 
         // Adding the item to link/unlink to the current activity
