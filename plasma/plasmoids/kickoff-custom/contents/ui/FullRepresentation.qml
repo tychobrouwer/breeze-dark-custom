@@ -183,7 +183,7 @@ EmptyPage {
                     } else {
                         root.blockingHoverFocus = true
                         contentItemStackView.contentItem.interceptedPosition = null
-                        contentItemStackView.contentItem.currentIndex = 0
+                        contentItemStackView.contentItem.currentIndex = 4
                     }
                 }
             }
