@@ -5,8 +5,7 @@
 
 import QtQuick 2.15
 import QtQml 2.15
-import org.kde.plasma.core as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 DropArea {
     id: root
@@ -14,7 +13,7 @@ DropArea {
     readonly property bool enableAutoScroll: targetView.height < targetView.contentHeight
     property real scrollUpMargin: 0
     property real scrollDownMargin: 0
-    enabled: Plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
+    enabled: plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
     onPositionChanged: if (drag.source instanceof KickoffGridDelegate || drag.source instanceof KickoffListDelegate) {
         const source = drag.source
         const view = drag.source.view
@@ -69,14 +68,14 @@ DropArea {
         target: root.targetView
         property: "contentY"
         to: 0
-        velocity: 200
+        velocity: 200 * PlasmaCore.Units.devicePixelRatio
         running: root.enableAutoScroll && root.containsDrag && root.drag.y <= root.scrollUpMargin
     }
     SmoothedAnimation {
         target: root.targetView
         property: "contentY"
         to: root.targetView.contentHeight - root.targetView.height
-        velocity: 200
+        velocity: 200 * PlasmaCore.Units.devicePixelRatio
         running: root.enableAutoScroll && root.containsDrag && root.drag.y >= root.height - root.scrollDownMargin
     }
 }

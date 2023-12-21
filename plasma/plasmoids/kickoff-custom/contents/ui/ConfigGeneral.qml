@@ -11,26 +11,22 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.5
 
-import org.kde.plasma.core as PlasmaCore
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.iconthemes as KIconThemes
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kquickcontrolsaddons 2.0 as KQuickAddons
 import org.kde.kirigami 2.20 as Kirigami
-import org.kde.kcmutils as KCM
-import org.kde.config as KConfig
-import org.kde.plasma.plasmoid 2.0
-import org.kde.kcmutils as KCM
+import org.kde.plasma.extras 2.0 as PlasmaExtras
 
 import "code/tools.js" as Tools
 
-KCM.SimpleKCM {
+ColumnLayout {
+
     property string cfg_menuLabel: menuLabel.text
-    property string cfg_icon: Plasmoid.configuration.icon
-    property bool cfg_paneSwap: Plasmoid.configuration.paneSwap
-    property int cfg_favoritesDisplay: Plasmoid.configuration.favoritesDisplay
-    property int cfg_applicationsDisplay: Plasmoid.configuration.applicationsDisplay
+    property string cfg_icon: plasmoid.configuration.icon
+    property int cfg_favoritesDisplay: plasmoid.configuration.favoritesDisplay
+    property int cfg_applicationsDisplay: plasmoid.configuration.applicationsDisplay
     property alias cfg_alphaSort: alphaSort.checked
-    property var cfg_systemFavorites: String(Plasmoid.configuration.systemFavorites)
-    property int cfg_primaryActions: Plasmoid.configuration.primaryActions
+    property var cfg_systemFavorites: String(plasmoid.configuration.systemFavorites)
+    property int cfg_primaryActions: plasmoid.configuration.primaryActions
     property alias cfg_showActionButtonCaptions: showActionButtonCaptions.checked
     property alias cfg_compactMode: compactModeCheckbox.checked
 
@@ -40,8 +36,8 @@ KCM.SimpleKCM {
 
             Kirigami.FormData.label: i18n("Icon:")
 
-            implicitWidth: previewFrame.width + Kirigami.Units.smallSpacing * 2
-            implicitHeight: previewFrame.height + Kirigami.Units.smallSpacing * 2
+            implicitWidth: previewFrame.width + PlasmaCore.Units.smallSpacing * 2
+            implicitHeight: previewFrame.height + PlasmaCore.Units.smallSpacing * 2
             hoverEnabled: true
 
             Accessible.name: i18nc("@action:button", "Change Application Launcher's icon")
@@ -52,26 +48,26 @@ KCM.SimpleKCM {
             ToolTip.text: i18nc("@info:tooltip", "Icon name is \"%1\"", cfg_icon)
             ToolTip.visible: iconButton.hovered && cfg_icon.length > 0
 
-            KIconThemes.IconDialog {
+            KQuickAddons.IconDialog {
                 id: iconDialog
                 onIconNameChanged: cfg_icon = iconName || Tools.defaultIconName
             }
 
             onPressed: iconMenu.opened ? iconMenu.close() : iconMenu.open()
 
-            KSvg.FrameSvgItem {
+            PlasmaCore.FrameSvgItem {
                 id: previewFrame
                 anchors.centerIn: parent
-                imagePath: Plasmoid.formFactor === PlasmaCore.Types.Vertical || Plasmoid.formFactor === PlasmaCore.Types.Horizontal
+                imagePath: plasmoid.formFactor === PlasmaCore.Types.Vertical || plasmoid.formFactor === PlasmaCore.Types.Horizontal
                         ? "widgets/panel-background" : "widgets/background"
-                width: Kirigami.Units.iconSizes.large + fixedMargins.left + fixedMargins.right
-                height: Kirigami.Units.iconSizes.large + fixedMargins.top + fixedMargins.bottom
+                width: PlasmaCore.Units.iconSizes.large + fixedMargins.left + fixedMargins.right
+                height: PlasmaCore.Units.iconSizes.large + fixedMargins.top + fixedMargins.bottom
 
-                Kirigami.Icon {
+                PlasmaCore.IconItem {
                     anchors.centerIn: parent
-                    width: Kirigami.Units.iconSizes.large
+                    width: PlasmaCore.Units.iconSizes.large
                     height: width
-                    source: Tools.iconOrDefault(Plasmoid.formFactor, cfg_icon)
+                    source: Tools.iconOrDefault(plasmoid.formFactor, cfg_icon)
                 }
             }
 
@@ -96,7 +92,7 @@ KCM.SimpleKCM {
                 MenuItem {
                     text: i18nc("@action:inmenu", "Remove icon")
                     icon.name: "delete"
-                    enabled: cfg_icon !== "" && menuLabel.text && Plasmoid.formFactor !== PlasmaCore.Types.Vertical
+                    enabled: cfg_icon !== "" && menuLabel.text && plasmoid.formFactor !== PlasmaCore.Types.Vertical
                     onClicked: cfg_icon = ""
                 }
             }
@@ -104,9 +100,9 @@ KCM.SimpleKCM {
 
         Kirigami.ActionTextField {
             id: menuLabel
-            enabled: Plasmoid.formFactor !== PlasmaCore.Types.Vertical
+            enabled: plasmoid.formFactor !== PlasmaCore.Types.Vertical
             Kirigami.FormData.label: i18nc("@label:textbox", "Text label:")
-            text: Plasmoid.configuration.menuLabel
+            text: plasmoid.configuration.menuLabel
             placeholderText: i18nc("@info:placeholder", "Type here to add a text label")
             onTextEdited: {
                 cfg_menuLabel = menuLabel.text
@@ -135,7 +131,7 @@ KCM.SimpleKCM {
         Label {
             Layout.fillWidth: true
             Layout.maximumWidth: Kirigami.Units.gridUnit * 25
-            visible: Plasmoid.formFactor === PlasmaCore.Types.Vertical
+            visible: plasmoid.formFactor === PlasmaCore.Types.Vertical
             text: i18nc("@info", "A text label cannot be set when the Panel is vertical.")
             wrapMode: Text.Wrap
             font: Kirigami.Theme.smallFont
@@ -154,7 +150,7 @@ KCM.SimpleKCM {
         CheckBox {
             id: compactModeCheckbox
             text: i18n("Use compact list item style")
-            checked: Kirigami.Settings.tabletMode ? true : Plasmoid.configuration.compactMode
+            checked: Kirigami.Settings.tabletMode ? true : plasmoid.configuration.compactMode
             enabled: !Kirigami.Settings.tabletMode
         }
         Label {
@@ -166,31 +162,14 @@ KCM.SimpleKCM {
         }
 
         Button {
-            enabled: KConfig.KAuthorized.authorizeControlModule("kcm_plasmasearch")
+            enabled: KQuickAddons.KCMShell.authorize("kcm_plasmasearch.desktop").length > 0
             icon.name: "settings-configure"
             text: i18nc("@action:button", "Configure Enabled Search Plugins…")
-            onClicked: KCM.KCMLauncher.openSystemSettings("kcm_plasmasearch")
+            onClicked: KQuickAddons.KCMShell.openSystemSettings("kcm_plasmasearch")
         }
 
         Item {
             Kirigami.FormData.isSection: true
-        }
-
-        RadioButton {
-            id: paneSwapOff
-            Kirigami.FormData.label: i18n("Sidebar position:")
-            text: Qt.application.layoutDirection == Qt.RightToLeft ? i18n("Right") : i18n("Left")
-            ButtonGroup.group: paneSwapGroup
-            property int index: 0
-            checked: !Plasmoid.configuration.paneSwap
-        }
-
-        RadioButton {
-            id: paneSwapOn
-            text: Qt.application.layoutDirection == Qt.RightToLeft ? i18n("Left") : i18n("Right")
-            ButtonGroup.group: paneSwapGroup
-            property int index: 1
-            checked: Plasmoid.configuration.paneSwap
         }
 
         RadioButton {
@@ -199,7 +178,7 @@ KCM.SimpleKCM {
             text: i18nc("Part of a sentence: 'Show favorites in a grid'", "In a grid")
             ButtonGroup.group: favoritesDisplayGroup
             property int index: 0
-            checked: Plasmoid.configuration.favoritesDisplay === index
+            checked: plasmoid.configuration.favoritesDisplay === index
         }
 
         RadioButton {
@@ -207,7 +186,7 @@ KCM.SimpleKCM {
             text: i18nc("Part of a sentence: 'Show favorites in a list'", "In a list")
             ButtonGroup.group: favoritesDisplayGroup
             property int index: 1
-            checked: Plasmoid.configuration.favoritesDisplay === index
+            checked: plasmoid.configuration.favoritesDisplay === index
         }
 
         RadioButton {
@@ -216,7 +195,7 @@ KCM.SimpleKCM {
             text: i18nc("Part of a sentence: 'Show other applications in a grid'", "In a grid")
             ButtonGroup.group: applicationsDisplayGroup
             property int index: 0
-            checked: Plasmoid.configuration.applicationsDisplay === index
+            checked: plasmoid.configuration.applicationsDisplay === index
         }
 
         RadioButton {
@@ -224,7 +203,7 @@ KCM.SimpleKCM {
             text: i18nc("Part of a sentence: 'Show other applications in a list'", "In a list")
             ButtonGroup.group: applicationsDisplayGroup
             property int index: 1
-            checked: Plasmoid.configuration.applicationsDisplay === index
+            checked: plasmoid.configuration.applicationsDisplay === index
         }
 
         Item {
@@ -238,7 +217,7 @@ KCM.SimpleKCM {
             ButtonGroup.group: radioGroup
             property string actions: "suspend,hibernate,reboot,shutdown"
             property int index: 0
-            checked: Plasmoid.configuration.primaryActions === index
+            checked: plasmoid.configuration.primaryActions === index
         }
 
         RadioButton {
@@ -247,7 +226,7 @@ KCM.SimpleKCM {
             ButtonGroup.group: radioGroup
             property string actions: "lock-screen,logout,save-session,switch-user"
             property int index: 1
-            checked: Plasmoid.configuration.primaryActions === index
+            checked: plasmoid.configuration.primaryActions === index
         }
 
         RadioButton {
@@ -256,21 +235,12 @@ KCM.SimpleKCM {
             ButtonGroup.group: radioGroup
             property string actions: "lock-screen,logout,save-session,switch-user,suspend,hibernate,reboot,shutdown"
             property int index: 3
-            checked: Plasmoid.configuration.primaryActions === index
+            checked: plasmoid.configuration.primaryActions === index
         }
 
         CheckBox {
             id: showActionButtonCaptions
             text: i18n("Show action button captions")
-        }
-    }
-
-    ButtonGroup {
-        id: paneSwapGroup
-        onCheckedButtonChanged: {
-            if (checkedButton) {
-                cfg_paneSwap = checkedButton.index === 1
-            }
         }
     }
 
@@ -300,5 +270,9 @@ KCM.SimpleKCM {
                 cfg_systemFavorites = checkedButton.actions
             }
         }
+    }
+
+    Item {
+        Layout.fillHeight: true
     }
 }

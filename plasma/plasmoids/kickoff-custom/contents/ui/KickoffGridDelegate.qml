@@ -12,19 +12,19 @@
 import QtQuick 2.15
 import QtQml 2.15
 import QtQuick.Layouts 1.15
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.20 as Kirigami
 
 AbstractKickoffItemDelegate {
     id: root
 
     leftPadding: KickoffSingleton.listItemMetrics.margins.left
     rightPadding: KickoffSingleton.listItemMetrics.margins.right
-    topPadding: Kirigami.Units.smallSpacing * 2
-    bottomPadding: Kirigami.Units.smallSpacing * 2
+    topPadding: PlasmaCore.Units.smallSpacing * 2
+    bottomPadding: PlasmaCore.Units.smallSpacing * 2
 
-    icon.width: Kirigami.Units.iconSizes.large
-    icon.height: Kirigami.Units.iconSizes.large
+    icon.width: PlasmaCore.Units.iconSizes.large
+    icon.height: PlasmaCore.Units.iconSizes.large
 
     labelTruncated: label.truncated
     descriptionVisible: false
@@ -34,14 +34,15 @@ AbstractKickoffItemDelegate {
     contentItem: ColumnLayout {
         spacing: root.spacing
 
-        Kirigami.Icon {
+        PlasmaCore.IconItem {
             id: iconItem
             implicitWidth: root.icon.width
             implicitHeight: root.icon.height
             Layout.alignment: Qt.AlignHCenter | Qt.AlignBottom
 
             animated: false
-            selected: root.iconAndLabelsShouldlookSelected
+            usesPlasmaTheme: false
+
             source: root.decoration || root.icon.name || root.icon.source
         }
 
@@ -58,7 +59,6 @@ AbstractKickoffItemDelegate {
             verticalAlignment: Text.AlignTop
             maximumLineCount: 2
             wrapMode: Text.Wrap
-            color: root.iconAndLabelsShouldlookSelected ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
         }
     }
 }

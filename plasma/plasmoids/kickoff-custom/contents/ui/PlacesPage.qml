@@ -8,6 +8,8 @@ import QtQuick 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Templates 2.15 as T
 import QtQml 2.15
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 3.0 as PC3
 
 BasePage {
     id: root
@@ -28,9 +30,9 @@ BasePage {
         focus: true
         objectName: "frequentlyUsedView"
         model: switch (root.sideBarItem.currentIndex) {
-            case 0: return kickoff.computerModel
-            case 1: return kickoff.recentUsageModel
-            case 2: return kickoff.frequentUsageModel
+            case 0: return plasmoid.rootItem.computerModel
+            case 1: return plasmoid.rootItem.recentUsageModel
+            case 2: return plasmoid.rootItem.frequentUsageModel
         }
         onActiveFocusChanged: if (activeFocus && count < 1) {
             root.sideBarItem.forceActiveFocus()
@@ -58,14 +60,14 @@ BasePage {
     // StackView.status and visible. This way the bindings are reset when
     // NormalPage is Activated again.
     Binding {
-        target: kickoff
+        target: plasmoid.rootItem
         property: "sideBar"
         value: root.sideBarItem
         when: root.T.StackView.status === T.StackView.Active && root.visible
         restoreMode: Binding.RestoreBinding
     }
     Binding {
-        target: kickoff
+        target: plasmoid.rootItem
         property: "contentArea"
         value: root.contentAreaItem // NOT root.contentAreaItem.currentItem
         when: root.T.StackView.status === T.StackView.Active && root.visible

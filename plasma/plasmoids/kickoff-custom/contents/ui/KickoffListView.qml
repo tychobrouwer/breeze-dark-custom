@@ -9,13 +9,10 @@
 */
 import QtQuick 2.15
 import QtQml 2.15
-
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 2.0 as PC2
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.extras as PlasmaExtras
-
-import org.kde.ksvg 1.0 as KSvg
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami 2.16 as Kirigami
 
 // ScrollView makes it difficult to control implicit size using the contentItem.
 // Using EmptyPage instead.
@@ -27,7 +24,6 @@ EmptyPage {
     property alias currentItem: view.currentItem
     property alias delegate: view.delegate
     property alias section: view.section
-    property alias highlight: view.highlight
     property alias view: view
 
     property bool mainContentView: false
@@ -82,32 +78,31 @@ EmptyPage {
         readonly property real availableWidth: width - leftMargin - rightMargin
         readonly property real availableHeight: height - topMargin - bottomMargin
         property bool movedWithKeyboard: false
-        property bool movedWithWheel: false
 
         Accessible.role: Accessible.List
 
         implicitWidth: {
             let totalMargins = leftMargin + rightMargin
             if (mainContentView) {
-                if (kickoff.mayHaveGridWithScrollBar) {
+                if (plasmoid.rootItem.mayHaveGridWithScrollBar) {
                     totalMargins += verticalScrollBar.implicitWidth
                 }
-                return KickoffSingleton.gridCellSize * kickoff.minimumGridRowCount + totalMargins
+                return KickoffSingleton.gridCellSize * plasmoid.rootItem.minimumGridRowCount + totalMargins
             }
             return contentWidth + totalMargins
         }
         implicitHeight: {
             // use grid cells to determine size
-            let h = KickoffSingleton.gridCellSize * kickoff.minimumGridRowCount
+            let h = KickoffSingleton.gridCellSize * plasmoid.rootItem.minimumGridRowCount
             // If no grids are used, use the number of items that would fit in the grid height
-            if (Plasmoid.configuration.favoritesDisplay !== 0 && Plasmoid.configuration.applicationsDisplay !== 0) {
-                h = Math.floor(h / kickoff.listDelegateHeight) * kickoff.listDelegateHeight
+            if (plasmoid.configuration.favoritesDisplay !== 0 && plasmoid.configuration.applicationsDisplay !== 0) {
+                h = Math.floor(h / plasmoid.rootItem.listDelegateHeight) * plasmoid.rootItem.listDelegateHeight
             }
             return h + topMargin + bottomMargin
         }
 
-        leftMargin: kickoff.backgroundMetrics.leftPadding
-        rightMargin: kickoff.backgroundMetrics.rightPadding
+        leftMargin: plasmoid.rootItem.backgroundMetrics.leftPadding
+        rightMargin: plasmoid.rootItem.backgroundMetrics.rightPadding
 
         currentIndex: count > 0 ? 0 : -1
         focus: true
@@ -123,15 +118,16 @@ EmptyPage {
         // This is actually needed. The highlight will animate from thin to wide otherwise.
         highlightResizeDuration: 0
         highlightMoveDuration: 0
-        highlight: PlasmaExtras.Highlight {
+        highlight: PlasmaCore.FrameSvgItem {
             // The default Z value for delegates is 1. The default Z value for the section delegate is 2.
             // The highlight gets a value of 3 while the drag is active and then goes back to the default value of 0.
             z: root.currentItem && root.currentItem.Drag.active ?
                 3 : 0
-            pressed: view.currentItem && view.currentItem.isPressed && !view.currentItem.isCategoryListItem
-            active: view.activeFocus
-                || (kickoff.contentArea === root
-                    && kickoff.searchField.activeFocus)
+            opacity: view.activeFocus
+                || (plasmoid.rootItem.contentArea === root
+                    && plasmoid.rootItem.searchField.activeFocus) ? 1 : 0.5
+            imagePath: "widgets/viewitem"
+            prefix: "hover"
         }
 
         delegate: KickoffListDelegate {
@@ -182,7 +178,7 @@ EmptyPage {
         Transition {
             id: normalTransition
             NumberAnimation {
-                duration: Kirigami.Units.shortDuration
+                duration: PlasmaCore.Units.shortDuration
                 properties: "x, y"
                 easing.type: Easing.OutCubic
             }
@@ -200,39 +196,26 @@ EmptyPage {
             target: view
             filterMouseEvents: true
             // `20 * Qt.styleHints.wheelScrollLines` is the default speed.
-            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines
-            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines
-
-            onWheel: wheel => {
-                view.movedWithWheel = true
-                view.movedWithKeyboard = false
-                movedWithWheelTimer.restart()
-            }
+            // `* PlasmaCore.Units.devicePixelRatio` is needed on X11
+            // because Plasma doesn't support Qt scaling.
+            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
+            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
         }
 
         Connections {
-            target: kickoff
+            target: plasmoid
             function onExpandedChanged() {
-                if (kickoff.expanded) {
+                if (plasmoid.expanded) {
                     view.currentIndex = 0
                     view.positionViewAtBeginning()
                 }
             }
         }
 
-        // Used to block hover events temporarily after using keyboard navigation.
-        // If you have one hand on the touch pad or mouse and another hand on the keyboard,
-        // it's easy to accidentally reset the highlight/focus position to the mouse position.
         Timer {
             id: movedWithKeyboardTimer
             interval: 200
             onTriggered: view.movedWithKeyboard = false
-        }
-
-        Timer {
-            id: movedWithWheelTimer
-            interval: 200
-            onTriggered: view.movedWithWheel = false
         }
 
         function focusCurrentItem(event, focusReason) {
@@ -240,13 +223,11 @@ EmptyPage {
             event.accepted = true
         }
 
-        Keys.onMenuPressed: event => {
-            if (currentItem !== null) {
-                currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
-                currentItem.openActionMenu()
-            }
+        Keys.onMenuPressed: if (currentItem !== null) {
+            currentItem.forceActiveFocus(Qt.ShortcutFocusReason)
+            currentItem.openActionMenu()
         }
-        Keys.onPressed: event => {
+        Keys.onPressed: {
             let targetX = currentItem ? currentItem.x : contentX
             let targetY = currentItem ? currentItem.y : contentY
             let targetIndex = currentIndex

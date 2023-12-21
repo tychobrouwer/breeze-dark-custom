@@ -14,23 +14,24 @@ import QtQuick.Templates 2.15 as T
 import QtQuick.Layouts 1.15
 import QtQml 2.15
 import org.kde.plasma.plasmoid 2.0
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.private.kicker 0.1 as Kicker
 
 EmptyPage {
     id: root
 
-    // kickoff is Kickoff.qml
-    leftPadding: -kickoff.backgroundMetrics.leftPadding
-    rightPadding: -kickoff.backgroundMetrics.rightPadding
+    // plasmoid.rootItem is Kickoff.qml
+    leftPadding: -plasmoid.rootItem.backgroundMetrics.leftPadding
+    rightPadding: -plasmoid.rootItem.backgroundMetrics.rightPadding
     topPadding: 0
-    bottomPadding: -kickoff.backgroundMetrics.bottomPadding
-    readonly property var appletInterface: kickoff
+    bottomPadding: -plasmoid.rootItem.backgroundMetrics.bottomPadding
+    readonly property var appletInterface: Plasmoid.self
 
     Layout.minimumWidth: implicitWidth
-    Layout.maximumWidth: Kirigami.Units.gridUnit * 80
+    Layout.maximumWidth: PlasmaCore.Units.gridUnit * 80
     Layout.minimumHeight: implicitHeight
-    Layout.maximumHeight: Kirigami.Units.gridUnit * 40
+    Layout.maximumHeight: PlasmaCore.Units.gridUnit * 40
     Layout.preferredWidth: Math.max(implicitWidth, width)
     Layout.preferredHeight: Math.max(implicitHeight, height)
 
@@ -59,18 +60,13 @@ EmptyPage {
      * - KeyNavigation uses BacktabFocusReason (TabFocusReason if mirrored) for left,
      * TabFocusReason (BacktabFocusReason if mirrored) for right,
      * BacktabFocusReason for up and TabFocusReason for down.
-     *
-     * - KeyNavigation does not seem to respect dynamic changes to focus chain
-     * rules in the reverse direction, which can lead to confusing results.
-     * It is therefore safer to use Keys for items whose position in the Tab
-     * order must be changed on demand. (Tested with Qt 5.15.8 on X11.)
      */
 
     header: Header {
         id: header
         preferredNameAndIconWidth: normalPage.preferredSideBarWidth
         Binding {
-            target: kickoff
+            target: plasmoid.rootItem
             property: "header"
             value: header
             restoreMode: Binding.RestoreBinding
@@ -95,22 +91,18 @@ EmptyPage {
                 mainContentView: true
                 // Forces the function be re-run every time runnerModel.count changes.
                 // This is absolutely necessary to make the search view work reliably.
-                model: kickoff.runnerModel.count ? kickoff.runnerModel.modelForRow(0) : null
+                model: plasmoid.rootItem.runnerModel.count ? plasmoid.rootItem.runnerModel.modelForRow(0) : null
                 delegate: KickoffListDelegate {
                     width: view.availableWidth
                     isSearchResult: true
                 }
                 activeFocusOnTab: true
                 property var interceptedPosition: null
-                Keys.onTabPressed: event => {
-                    kickoff.firstHeaderItem.forceActiveFocus(Qt.TabFocusReason);
-                }
-                Keys.onBacktabPressed: event => {
-                    kickoff.lastHeaderItem.forceActiveFocus(Qt.BacktabFocusReason);
-                }
+                // always focus the first item in the header focus chain
+                KeyNavigation.tab: root.header.nextItemInFocusChain()
                 T.StackView.onActivated: {
-                    kickoff.sideBar = null
-                    kickoff.contentArea = searchView
+                    plasmoid.rootItem.sideBar = null
+                    plasmoid.rootItem.contentArea = searchView
                 }
 
                 Connections {
@@ -139,7 +131,7 @@ EmptyPage {
 
                 Loader {
                     anchors.centerIn: searchView.view
-                    width: searchView.view.width - (Kirigami.Units.gridUnit * 4)
+                    width: searchView.view.width - (PlasmaCore.Units.largeSpacing * 4)
 
                     active: searchView.view.count === 0
                     visible: active
@@ -153,7 +145,7 @@ EmptyPage {
                         text: i18nc("@info:status", "No matches")
 
                         Connections {
-                            target: kickoff.runnerModel
+                            target: Plasmoid.rootItem.runnerModel
                             function onQueryFinished() {
                                 showAnimation.restart()
                             }
@@ -161,7 +153,7 @@ EmptyPage {
 
                         NumberAnimation {
                             id: showAnimation
-                            duration: Kirigami.Units.longDuration
+                            duration: PlasmaCore.Units.longDuration
                             easing.type: Easing.OutCubic
                             property: "opacity"
                             target: emptyHint
@@ -175,7 +167,7 @@ EmptyPage {
         Keys.priority: Keys.AfterItem
         // This is here rather than root because events are implicitly forwarded
         // to parent items. Don't want to send multiple events to searchField.
-        Keys.forwardTo: kickoff.searchField
+        Keys.forwardTo: plasmoid.rootItem.searchField
 
         Connections {
             target: root.header

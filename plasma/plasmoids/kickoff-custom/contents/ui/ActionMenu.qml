@@ -10,25 +10,26 @@
 pragma Singleton // NOTE: Singletons are shared between all instances of a plasmoid
 
 import QtQuick 2.15
-import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.components 2.0 as PC2 // for Menu + MenuItem
 import "code/tools.js" as Tools
 
 Item {
     id: root
 
-    property var actionList: null
+    property var actionList: menu.visualParent ? menu.visualParent.actionList : null
 
+    // Workaround for `plasmoid` context property not working in singletons.
     // Only one action menu can be open at a time, so this should be safe to use.
-    property PlasmoidItem plasmoid: null
+    property Plasmoid plasmoid: null
 
     // Not a QQC1 Menu. It's actually a custom QObject that uses a QMenu.
-    readonly property PlasmaExtras.Menu menu: PlasmaExtras.Menu {
+    readonly property PC2.Menu menu: PC2.Menu {
         id: menu
 
         visualParent: null
-        placement: PlasmaExtras.Menu.BottomPosedLeftAlignedPopup
+        placement: PlasmaCore.Types.BottomPosedLeftAlignedPopup
     }
 
     visible: false
@@ -37,24 +38,24 @@ Item {
         active: root.actionList !== null
         model: root.actionList
         delegate: menuItemComponent
-        onObjectAdded: (index, object) => menu.addMenuItem(object)
-        onObjectRemoved: (index, object) => menu.removeMenuItem(object)
+        onObjectAdded: menu.addMenuItem(object)
+        onObjectRemoved: menu.removeMenuItem(object)
     }
 
     Component {
         id: menuComponent
 
-        PlasmaExtras.Menu {}
+        PC2.Menu {}
     }
 
     Component {
         id: menuItemComponent
 
-        PlasmaExtras.MenuItem {
+        PC2.MenuItem {
             id: menuItem
 
             required property var modelData
-            property PlasmaExtras.Menu subMenu: modelData.subActions
+            property PC2.Menu subMenu: modelData.subActions
                 ? menuComponent.createObject(menuItem, { visualParent: menuItem.action })
                 : null
 
@@ -66,12 +67,12 @@ Item {
             checkable: modelData.hasOwnProperty("checkable") ? modelData.checkable : false
             checked: modelData.hasOwnProperty("checked") ? modelData.checked : false
 
-            property Instantiator _instantiator: Instantiator {
+            Instantiator {
                 active: menuItem.subMenu !== null
                 model: modelData.subActions
                 delegate: menuItemComponent
-                onObjectAdded: (index, object) => subMenu.addMenuItem(object)
-                onObjectRemoved: (index, object) => subMenu.removeMenuItem(object)
+                onObjectAdded: subMenu.addMenuItem(object)
+                onObjectRemoved: subMenu.removeMenuItem(object)
             }
 
             onClicked: {
@@ -82,7 +83,7 @@ Item {
                     modelData.actionArgument
                 )
                 if (modelActionTriggered) {
-                    kickoff.expanded = false
+                    root.plasmoid.expanded = false
                 }
             }
         }

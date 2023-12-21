@@ -13,11 +13,10 @@ import QtQuick 2.15
 import QtQml 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Templates 2.15 as T
-import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami 2.16 as Kirigami
 import "code/tools.js" as Tools
-import org.kde.plasma.plasmoid 2.0
 
 T.ItemDelegate {
     id: root
@@ -32,18 +31,15 @@ T.ItemDelegate {
     readonly property Flickable view: ListView.view ?? GridView.view
     property bool isCategoryListItem: false
     readonly property bool hasActionList: model && (model.favoriteId !== null || ("hasActionList" in model && model.hasActionList === true))
+    property var actionList: null
     property bool isSearchResult: false
 
     readonly property bool isSeparator: model && (model.isSeparator === true)
-    property int separatorHeight: KickoffSingleton.lineSvg.horLineHeight + (2 * Kirigami.Units.smallSpacing)
+    property int separatorHeight: KickoffSingleton.lineSvg.horLineHeight + (2 * PlasmaCore.Units.smallSpacing)
     property int itemHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding)
 
     readonly property bool dragEnabled: enabled && !isCategoryListItem
-        && Plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
-
-    readonly property alias mouseArea: mouseArea
-
-    readonly property bool iconAndLabelsShouldlookSelected: isPressed && !isCategoryListItem
+        && plasmoid.immutability !== PlasmaCore.Types.SystemImmutable
 
     property bool labelTruncated: false
     property bool descriptionTruncated: false
@@ -51,31 +47,28 @@ T.ItemDelegate {
 
     property Item dragIconItem: null
 
-    // pressed: is read-only and we're not using it here because we have fancy
-    // custom mouse handling
-    readonly property bool isPressed: mouseArea.pressed
-
     function openActionMenu(x = undefined, y = undefined) {
         if (!hasActionList) { return; }
-
-        let actions = model.actionList;
-        const favoriteActions = Tools.createFavoriteActions(
-            i18n, //i18n() function callback
-            view.model.favoritesModel,
-            model.favoriteId,
-        );
-        if (favoriteActions) {
-            if (actions && actions.length > 0) {
-                actions.push({ "type": "separator" }, ...favoriteActions);
-            } else {
-                actions = favoriteActions;
+        // fill actionList only when needed to prevent slowness when changing app categories rapidly.
+        if (actionList === null) {
+            let allActions = model.actionList;
+            const favoriteActions = Tools.createFavoriteActions(
+                i18n, //i18n() function callback
+                view.model.favoritesModel,
+                model.favoriteId,
+            );
+            if (favoriteActions) {
+                if (allActions && allActions.length > 0) {
+                    allActions.push({ "type": "separator" }, ...favoriteActions);
+                } else {
+                    allActions = favoriteActions;
+                }
             }
+            actionList = allActions;
         }
-
-        if (actions && actions.length > 0) {
-            ActionMenu.plasmoid = kickoff;
+        if (actionList && actionList.length > 0) {
+            ActionMenu.plasmoid = plasmoid;
             ActionMenu.menu.visualParent = root;
-            ActionMenu.actionList = actions;
             if (x !== undefined && y !== undefined) {
                 ActionMenu.menu.open(x, y);
             } else {
@@ -97,7 +90,7 @@ T.ItemDelegate {
     enabled: !isSeparator && !model.disabled
     hoverEnabled: false
 
-    text: model.name ?? model.displayWrapped ?? model.display
+    text: model.name ?? model.display
     Accessible.role: Accessible.ListItem
     Accessible.description: root.description !== root.text ? root.description : ""
     Accessible.onPressAction: {
@@ -119,8 +112,8 @@ T.ItemDelegate {
             view.currentIndex = index
             // if successfully triggered, close popup
             if (view.model.trigger && view.model.trigger(index, "", null)) {
-                if (kickoff.hideOnWindowDeactivate) {
-                    kickoff.expanded = false;
+                if (plasmoid.hideOnWindowDeactivate) {
+                    plasmoid.expanded = false;
                 }
             }
         }
@@ -142,13 +135,10 @@ T.ItemDelegate {
         // Only for ListView since extending margins for GridView is hard
         anchors.leftMargin: root.view instanceof ListView ? -root.view.leftMargin : anchors.margins
         anchors.rightMargin: root.view instanceof ListView ? -root.view.rightMargin : anchors.margins
-        hoverEnabled: root.view
-            // When the movedWithWheel condition is broken, this ensures that
-            // onEntered is called again without moving the mouse.
-            && !root.view.movedWithWheel
+        hoverEnabled: root.view && !root.view.movedWithKeyboard
             // Fix VerticalStackView animation causing view currentIndex
             // to change while delegates are moving under the mouse cursor
-            && kickoff.fullRepresentationItem && !kickoff.fullRepresentationItem.contentItem.busy && !kickoff.fullRepresentationItem.blockingHoverFocus
+            && plasmoid.fullRepresentationItem && !plasmoid.fullRepresentationItem.contentItem.busy && !plasmoid.fullRepresentationItem.blockingHoverFocus
         acceptedButtons: Qt.LeftButton | Qt.RightButton
         drag {
             axis: Drag.XAndYAxis
@@ -157,18 +147,12 @@ T.ItemDelegate {
         // Using this Item fixes drag and drop causing delegates
         // to reset to a 0 X position and overlapping each other.
         Item { id: dragItem }
-
-        onEntered: {
-            // When the movedWithKeyboard condition is broken, we do not want to
-            // select the hovered item without moving the mouse.
-            if (root.view.movedWithKeyboard) {
-                return
-            }
-            // Don't highlight separators.
-            if (root.isSeparator) {
-                return;
-            }
-
+        // Using onPositionChanged instead of onEntered because it enables several
+        // desirable behaviors:
+        // 1. prevents changing selection while scrolling with the mouse wheel
+        // 2. Prevents the cursor position resetting selection when navigating using the keyboard
+        // See Bugs 455674 and 454349
+        onPositionChanged: {
             // forceActiveFocus() touches multiple items, so check for
             // activeFocus first to be more efficient.
             if (!root.activeFocus) {
@@ -178,7 +162,7 @@ T.ItemDelegate {
             // built into QQuickListView::setCurrentIndex() already
             root.view.currentIndex = index
         }
-        onPressed: mouse => {
+        onPressed: {
             // Select and focus on press to improve responsiveness and touch feedback
             view.currentIndex = index
             root.forceActiveFocus(Qt.MouseFocusReason)
@@ -198,17 +182,13 @@ T.ItemDelegate {
                 })
             }
         }
-        onClicked: mouse => {
-            if (mouse.button === Qt.LeftButton) {
-                root.action.trigger()
-            }
+        onClicked: if (mouse.button === Qt.LeftButton) {
+            root.action.trigger()
         }
         // MouseEvents for pressAndHold use Qt.MouseEventSynthesizedByQt for mouse.source,
         // which makes checking mouse.source for whether or not touch input is used useless.
-        onPressAndHold: mouse => {
-            if (mouse.button === Qt.LeftButton) {
-                root.openActionMenu(mouseX, mouseY)
-            }
+        onPressAndHold: if (mouse.button === Qt.LeftButton) {
+            root.openActionMenu(mouseX, mouseY)
         }
     }
 

@@ -6,6 +6,8 @@
 import QtQuick 2.15
 import QtQuick.Templates 2.15 as T
 import QtQml 2.15
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.components 3.0 as PC3
 
 EmptyPage {
     id: root
@@ -17,12 +19,12 @@ EmptyPage {
         reverseTransitions: footer.tabBar.currentIndex === 1
         initialItem: ApplicationsPage {
             id: applicationsPage
-            preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
+            preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
         }
         Component {
             id: placesPage
             PlacesPage {
-                preferredSideBarWidth: root.preferredSideBarWidth + kickoff.backgroundMetrics.leftPadding
+                preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
                 preferredSideBarHeight: applicationsPage.implicitSideBarHeight
             }
         }
@@ -42,12 +44,12 @@ EmptyPage {
         id: footer
         preferredTabBarWidth: root.preferredSideBarWidth
         Binding {
-            target: kickoff
+            target: plasmoid.rootItem
             property: "footer"
             value: footer
             restoreMode: Binding.RestoreBinding
         }
         // Eat down events to prevent them from reaching the contentArea or searchField
-        Keys.onDownPressed: event => {}
+        Keys.onDownPressed: {}
     }
 }

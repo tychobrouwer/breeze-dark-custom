@@ -7,7 +7,6 @@
 import QtQuick 2.15
 
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.plasma.plasmoid 2.0
 
 KickoffGridView {
     id: root
@@ -26,7 +25,7 @@ KickoffGridView {
 
     // Using implicitWidth instead of width so that delegates don't
     // become super big when using the new popup resizing feature.
-    view.cellWidth: Math.floor((view.implicitWidth - view.leftMargin - view.rightMargin) / (kickoff.minimumGridRowCount * 1.75))
+    view.cellWidth: Math.floor((view.implicitWidth - view.leftMargin - view.rightMargin) / (plasmoid.rootItem.minimumGridRowCount * 1.75))
     view.cellHeight: view.cellWidth
 
     delegate: PC3.AbstractButton {
@@ -52,14 +51,10 @@ KickoffGridView {
             font.pixelSize: fontMetrics.font.pixelSize
             fontSizeMode: Text.VerticalFit
 
-            text: model.section
+            text: modelData["section"]
         }
 
-        onClicked: {
-            const isGridView = Plasmoid.configuration.applicationsDisplay === 0
-            const destinationIndex = isGridView ? index : model.firstIndex
-            root.hideSectionViewRequested(destinationIndex)
-        }
+        onClicked: root.hideSectionViewRequested(modelData["firstIndex"])
     }
 
     FontMetrics {
@@ -72,8 +67,8 @@ KickoffGridView {
     }
 
     Component.onCompleted: {
-        for (let i = 0; i < model.count; i++) {
-            if (model.data(model.index([i], 0), Qt.DisplayRole) === root.currentSection) {
+        for (let i = 0; i < model.length; i++) {
+            if (model[i]["section"] === root.currentSection) {
                 view.positionViewAtIndex(i, ListView.Beginning);
                 view.currentIndex = i;
                 return;

@@ -7,10 +7,9 @@
 
 import QtQuick 2.15
 import QtQml 2.15
-import org.kde.ksvg 1.0 as KSvg
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.20 as Kirigami
 
 PlasmaExtras.PlasmoidHeading {
     id: root
@@ -23,17 +22,17 @@ PlasmaExtras.PlasmoidHeading {
     contentHeight: leaveButtons.implicitHeight
 
     // We use an increased vertical padding to improve touch usability
-    leftPadding: kickoff.backgroundMetrics.leftPadding
-    rightPadding: kickoff.backgroundMetrics.rightPadding
-    topPadding: Kirigami.Units.smallSpacing * 2
-    bottomPadding: Kirigami.Units.smallSpacing * 2
+    leftPadding: plasmoid.rootItem.backgroundMetrics.leftPadding
+    rightPadding: plasmoid.rootItem.backgroundMetrics.rightPadding
+    topPadding: PlasmaCore.Units.smallSpacing * 2
+    bottomPadding: PlasmaCore.Units.smallSpacing * 2
 
     leftInset: 0
     rightInset: 0
     topInset: 0
     bottomInset: 0
 
-    spacing: kickoff.backgroundMetrics.spacing
+    spacing: plasmoid.rootItem.backgroundMetrics.spacing
     position: PC3.ToolBar.Footer
 
     PC3.TabBar {
@@ -68,17 +67,18 @@ PlasmaExtras.PlasmoidHeading {
             flickableDirection: Flickable.AutoFlickIfNeeded
             snapMode: ListView.SnapToItem
 
-            highlightMoveDuration: Kirigami.Units.longDuration
+            highlightMoveDuration: PlasmaCore.Units.longDuration
             highlightRangeMode: ListView.ApplyRange
             preferredHighlightBegin: tabBar.tabWidth
             preferredHighlightEnd: width - tabBar.tabWidth
-            highlight: KSvg.FrameSvgItem {
+            highlight: PlasmaCore.FrameSvgItem {
                 anchors.top: tabBarListView.contentItem.top
                 anchors.bottom: tabBarListView.contentItem.bottom
                 anchors.topMargin: -root.topPadding
                 anchors.bottomMargin: -root.bottomPadding
                 imagePath: "widgets/tabbar"
                 prefix: tabBar.position === PC3.TabBar.Header ? "north-active-tab" : "south-active-tab"
+                colorGroup: PlasmaCore.ColorScope.colorGroup
             }
             keyNavigationEnabled: false
         }
@@ -91,14 +91,11 @@ PlasmaExtras.PlasmoidHeading {
             anchors.bottom: tabBarListView.contentItem.bottom
             anchors.topMargin: -root.topPadding
             anchors.bottomMargin: -root.bottomPadding
-            icon.width: Kirigami.Units.iconSizes.smallMedium
-            icon.height: Kirigami.Units.iconSizes.smallMedium
-            icon.name: "applications-all-symbolic"
+            icon.width: PlasmaCore.Units.iconSizes.smallMedium
+            icon.height: PlasmaCore.Units.iconSizes.smallMedium
+            icon.name: "applications-other"
             text: i18n("Applications")
-            Keys.onBacktabPressed: event => {
-                (kickoff.lastCentralPane || nextItemInFocusChain(false))
-                    .forceActiveFocus(Qt.BacktabFocusReason)
-            }
+            KeyNavigation.backtab: plasmoid.rootItem.contentArea ? plasmoid.rootItem.contentArea : null
         }
         PC3.TabButton {
             id: placesTab
@@ -107,41 +104,52 @@ PlasmaExtras.PlasmoidHeading {
             anchors.bottom: tabBarListView.contentItem.bottom
             anchors.topMargin: -root.topPadding
             anchors.bottomMargin: -root.bottomPadding
-            icon.width: Kirigami.Units.iconSizes.smallMedium
-            icon.height: Kirigami.Units.iconSizes.smallMedium
+            icon.width: PlasmaCore.Units.iconSizes.smallMedium
+            icon.height: PlasmaCore.Units.iconSizes.smallMedium
             icon.name: "compass"
             text: i18n("Places") //Explore?
         }
 
         Connections {
-            target: kickoff
+            target: plasmoid
             function onExpandedChanged() {
-                if (kickoff.expanded) {
+                if (plasmoid.expanded) {
                     tabBar.currentIndex = 0
                 }
             }
         }
 
-        Keys.onPressed: event => {
-            const Key_Next = Qt.application.layoutDirection === Qt.RightToLeft ? Qt.Key_Left : Qt.Key_Right
-            const Key_Prev = Qt.application.layoutDirection === Qt.RightToLeft ? Qt.Key_Right : Qt.Key_Left
-            if (event.key === Key_Next) {
-                if (currentIndex === count - 1) {
-                    leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-                } else {
-                    incrementCurrentIndex()
-                    currentItem.forceActiveFocus(Qt.TabFocusReason)
-                }
-                event.accepted = true
-            } else if (event.key === Key_Prev && currentIndex > 0) {
+        Keys.onLeftPressed: {
+            let moved = false
+            if (LayoutMirroring.enabled && currentIndex === 0) {
+                incrementCurrentIndex()
+                currentItem.forceActiveFocus(Qt.TabFocusReason)
+                moved = true
+            } else if (currentIndex === 1) {
                 decrementCurrentIndex()
                 currentItem.forceActiveFocus(Qt.BacktabFocusReason)
-                event.accepted = true
+                moved = true
+            }
+            if (!moved && currentIndex === 1) {
+                leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
             }
         }
-        Keys.onUpPressed: event => {
-            kickoff.firstCentralPane.forceActiveFocus(Qt.BacktabFocusReason);
+        Keys.onRightPressed: {
+            let moved = false
+            if (LayoutMirroring.enabled && currentIndex === 1) {
+                decrementCurrentIndex()
+                currentItem.forceActiveFocus(Qt.BacktabFocusReason)
+                moved = true
+            } else if (currentIndex === 0) {
+                incrementCurrentIndex()
+                currentItem.forceActiveFocus(Qt.TabFocusReason)
+                moved = true
+            }
+            if (!moved && currentIndex === 1) {
+                leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+            }
         }
+        Keys.onUpPressed: plasmoid.rootItem.sideBar.forceActiveFocus(Qt.BacktabFocusReason)
     }
 
     LeaveButtons {
@@ -153,15 +161,13 @@ PlasmaExtras.PlasmoidHeading {
             leftMargin: root.spacing
         }
         shouldCollapseButtons: root.contentWidth + root.spacing + buttonImplicitWidth > root.width
-        Keys.onUpPressed: event => {
-            kickoff.lastCentralPane.forceActiveFocus(Qt.BacktabFocusReason);
-        }
+        Keys.onUpPressed: plasmoid.rootItem.contentArea.forceActiveFocus(Qt.BacktabFocusReason)
     }
 
     Behavior on height {
-        enabled: kickoff.expanded
+        enabled: plasmoid.expanded
         NumberAnimation {
-            duration: Kirigami.Units.longDuration
+            duration: PlasmaCore.Units.longDuration
             easing.type: Easing.InQuad
         }
     }

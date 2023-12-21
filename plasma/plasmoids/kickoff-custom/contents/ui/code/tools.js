@@ -8,14 +8,31 @@
 */
 
 .pragma library
-.import org.kde.plasma.core as PlasmaCore
+.import org.kde.plasma.core 2.1 as PlasmaCore
 
-const defaultIconName = "start-here-kde-symbolic";
+const defaultIconName = "start-here-kde";
 
 function iconOrDefault(formFactor, preferredIconName) {
     // Vertical panels must have an icon, at least a default one.
     return (formFactor === PlasmaCore.Types.Vertical && preferredIconName === "")
         ? defaultIconName : preferredIconName;
+}
+
+function fillActionMenu(i18n, actionMenu, actionList, favoriteModel, favoriteId) {
+    // Accessing actionList can be a costly operation, so we don't
+    // access it until we need the menu.
+
+    var actions = createFavoriteActions(i18n, favoriteModel, favoriteId);
+
+    if (actions && actions.length > 0) {
+        if (actionList && actionList.length > 0) {
+            actionList.push({ "type": "separator" }, ...actions);
+        } else {
+            actionList = actions;
+        }
+    }
+
+    actionMenu.actionList = actionList;
 }
 
 function createFavoriteActions(i18n, favoriteModel, favoriteId) {

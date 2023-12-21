@@ -12,26 +12,25 @@
 import QtQuick 2.15
 import QtQml 2.15
 import QtQuick.Layouts 1.15
-import org.kde.ksvg 1.0 as KSvg
+import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PC3
-import org.kde.kirigami 2.20 as Kirigami
-import org.kde.plasma.plasmoid 2.0
+import org.kde.kirigami 2.16 as Kirigami
 
 AbstractKickoffItemDelegate {
     id: root
 
-    property bool compact: Kirigami.Settings.tabletMode ? false : Plasmoid.configuration.compactMode
+    property bool compact: Kirigami.Settings.tabletMode ? false : plasmoid.configuration.compactMode
 
     leftPadding: KickoffSingleton.listItemMetrics.margins.left
     + (mirrored ? KickoffSingleton.fontMetrics.descent : 0)
     rightPadding: KickoffSingleton.listItemMetrics.margins.right
     + (!mirrored ? KickoffSingleton.fontMetrics.descent : 0)
     // Otherwise it's *too* compact :)
-    topPadding: compact ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
-    bottomPadding: compact ? Kirigami.Units.mediumSpacing : Kirigami.Units.smallSpacing
+    topPadding: compact ? PlasmaCore.Units.mediumSpacing : PlasmaCore.Units.smallSpacing
+    bottomPadding: compact ? PlasmaCore.Units.mediumSpacing : PlasmaCore.Units.smallSpacing
 
-    icon.width: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.smallMedium : Kirigami.Units.iconSizes.medium
-    icon.height: compact || root.isCategoryListItem ? Kirigami.Units.iconSizes.smallMedium : Kirigami.Units.iconSizes.medium
+    icon.width: compact || root.isCategoryListItem ? PlasmaCore.Units.iconSizes.smallMedium : PlasmaCore.Units.iconSizes.medium
+    icon.height: compact || root.isCategoryListItem ? PlasmaCore.Units.iconSizes.smallMedium : PlasmaCore.Units.iconSizes.medium
 
     labelTruncated: label.truncated
     descriptionTruncated: descriptionLabel.truncated
@@ -43,28 +42,26 @@ AbstractKickoffItemDelegate {
         id: row
         spacing: KickoffSingleton.listItemMetrics.margins.left * 2
 
-        Kirigami.Icon {
+        PlasmaCore.IconItem {
             id: icon
             implicitWidth: root.icon.width
             implicitHeight: root.icon.height
             Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
 
             animated: false
-            selected: root.iconAndLabelsShouldlookSelected
+            usesPlasmaTheme: false
+
             source: root.decoration || root.icon.name || root.icon.source
         }
 
         GridLayout {
             id: gridLayout
-
-            readonly property color textColor: root.iconAndLabelsShouldlookSelected ? Kirigami.Theme.highlightedTextColor : Kirigami.Theme.textColor
-
             Layout.fillWidth: true
 
             rows: root.compact ? 1 : 2
             columns: root.compact ? 2 : 1
             rowSpacing: 0
-            columnSpacing: Kirigami.Units.largeSpacing
+            columnSpacing: root.spacing
 
             PC3.Label {
                 id: label
@@ -84,7 +81,6 @@ AbstractKickoffItemDelegate {
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
                 maximumLineCount: 1
-                color: gridLayout.textColor
             }
 
             PC3.Label {
@@ -96,12 +92,11 @@ AbstractKickoffItemDelegate {
                 enabled: false
                 text: root.description
                 textFormat: Text.PlainText
-                font: Kirigami.Theme.smallFont
+                font: PlasmaCore.Theme.smallestFont
                 elide: Text.ElideRight
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: root.compact ? Text.AlignRight : Text.AlignLeft
                 maximumLineCount: 1
-                color: gridLayout.textColor
             }
         }
     }
@@ -116,7 +111,7 @@ AbstractKickoffItemDelegate {
         active: root.isSeparator
 
         asynchronous: false
-        sourceComponent: KSvg.SvgItem {
+        sourceComponent: PlasmaCore.SvgItem {
             width: parent.width
             height: KickoffSingleton.lineSvg.horLineHeight
 
