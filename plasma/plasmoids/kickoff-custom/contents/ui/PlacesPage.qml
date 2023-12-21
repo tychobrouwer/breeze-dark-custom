@@ -13,17 +13,17 @@ import org.kde.plasma.components 3.0 as PC3
 
 BasePage {
     id: root
-    // sideBarComponent: KickoffListView {
-    //     id: sideBar
-    //     focus: true // needed for Loaders
-    //     model: placesCategoryModel
-    //     delegate: KickoffListDelegate {
-    //         url: ""
-    //         description: ""
-    //         width: view.availableWidth
-    //         isCategoryListItem: true
-    //     }
-    // }
+    sideBarComponent: KickoffListView {
+        id: sideBar
+        focus: true // needed for Loaders
+        model: placesCategoryModel
+        delegate: KickoffListDelegate {
+            url: ""
+            description: ""
+            width: view.availableWidth
+            isCategoryListItem: true
+        }
+    }
     contentAreaComponent: KickoffListView {
         id: contentArea
         mainContentView: true
