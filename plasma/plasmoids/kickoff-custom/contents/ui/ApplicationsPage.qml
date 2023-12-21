@@ -183,13 +183,13 @@ BasePage {
     // NormalPage doesn't get destroyed when deactivated, so the binding uses
     // StackView.status and visible. This way the bindings are reset when
     // NormalPage is Activated again.
-    Binding {
-        target: plasmoid.rootItem
-        property: "sideBar"
-        value: root.sideBarItem
-        when: root.T.StackView.status === T.StackView.Active && root.visible
-        restoreMode: Binding.RestoreBinding
-    }
+    // Binding {
+    //     target: plasmoid.rootItem
+    //     property: "sideBar"
+    //     value: root.sideBarItem
+    //     when: root.T.StackView.status === T.StackView.Active && root.visible
+    //     restoreMode: Binding.RestoreBinding
+    // }
     Binding {
         target: plasmoid.rootItem
         property: "contentArea"
