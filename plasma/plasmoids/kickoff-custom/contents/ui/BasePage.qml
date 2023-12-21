@@ -48,18 +48,18 @@ FocusScope {
         Keys.onUpPressed: plasmoid.rootItem.searchField.forceActiveFocus(Qt.BacktabFocusReason)
         Keys.onDownPressed: plasmoid.rootItem.footer.leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
     }
-    PlasmaCore.SvgItem {
-        id: separator
-        anchors {
-            left: sideBarFilter.right
-            top: parent.top
-            bottom: parent.bottom
-        }
-        implicitWidth: naturalSize.width
-        implicitHeight: implicitWidth
-        elementId: "vertical-line"
-        svg: KickoffSingleton.lineSvg
-    }
+    // PlasmaCore.SvgItem {
+    //     id: separator
+    //     anchors {
+    //         left: sideBarFilter.right
+    //         top: parent.top
+    //         bottom: parent.bottom
+    //     }
+    //     implicitWidth: naturalSize.width
+    //     implicitHeight: implicitWidth
+    //     elementId: "vertical-line"
+    //     svg: KickoffSingleton.lineSvg
+    // }
     TriangleMouseFilter {
         id: sideBarFilter
         anchors {
