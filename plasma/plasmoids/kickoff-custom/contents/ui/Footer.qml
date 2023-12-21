@@ -83,20 +83,20 @@ PlasmaExtras.PlasmoidHeading {
             keyNavigationEnabled: false
         }
 
-        PC3.TabButton {
-            id: applicationsTab
-            focus: true
-            width: tabBar.tabWidth
-            anchors.top: tabBarListView.contentItem.top
-            anchors.bottom: tabBarListView.contentItem.bottom
-            anchors.topMargin: -root.topPadding
-            anchors.bottomMargin: -root.bottomPadding
-            icon.width: PlasmaCore.Units.iconSizes.smallMedium
-            icon.height: PlasmaCore.Units.iconSizes.smallMedium
-            icon.name: "applications-other"
-            text: i18n("Applications")
-            KeyNavigation.backtab: plasmoid.rootItem.contentArea ? plasmoid.rootItem.contentArea : null
-        }
+        // PC3.TabButton {
+        //     id: applicationsTab
+        //     focus: true
+        //     width: tabBar.tabWidth
+        //     anchors.top: tabBarListView.contentItem.top
+        //     anchors.bottom: tabBarListView.contentItem.bottom
+        //     anchors.topMargin: -root.topPadding
+        //     anchors.bottomMargin: -root.bottomPadding
+        //     icon.width: PlasmaCore.Units.iconSizes.smallMedium
+        //     icon.height: PlasmaCore.Units.iconSizes.smallMedium
+        //     icon.name: "applications-other"
+        //     text: i18n("Applications")
+        //     KeyNavigation.backtab: plasmoid.rootItem.contentArea ? plasmoid.rootItem.contentArea : null
+        // }
         // PC3.TabButton {
         //     id: placesTab
         //     width: tabBar.tabWidth
