@@ -58,7 +58,7 @@ FocusScope {
         implicitWidth: naturalSize.width
         implicitHeight: implicitWidth
         elementId: "vertical-line"
-        svg: KickoffSingleton.lineSvg
+        // svg: KickoffSingleton.lineSvg
     }
     TriangleMouseFilter {
         id: sideBarFilter

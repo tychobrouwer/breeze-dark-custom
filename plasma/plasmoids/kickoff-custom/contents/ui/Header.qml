@@ -52,56 +52,56 @@ PlasmaExtras.PlasmoidHeading {
         height: parent.height
         width: root.preferredNameAndIconWidth
 
-        PC3.RoundButton {
-            id: avatar
-            visible: KQuickAddons.KCMShell.authorize("kcm_users.desktop").length > 0
-            hoverEnabled: true
-            Layout.fillHeight: true
-            Layout.minimumWidth: height
-            Layout.maximumWidth: height
-            // FIXME: Not using text with display because of RoundButton bugs in plasma-framework
-            // See https://bugs.kde.org/show_bug.cgi?id=440022
-            Accessible.name: i18n("Open user settings")
-            leftPadding: PlasmaCore.Units.devicePixelRatio
-            rightPadding: PlasmaCore.Units.devicePixelRatio
-            topPadding: PlasmaCore.Units.devicePixelRatio
-            bottomPadding: PlasmaCore.Units.devicePixelRatio
-            contentItem: Kirigami.Avatar {
-                source: kuser.faceIconUrl
-                name: kuser.fullName
-            }
-            Rectangle {
-                parent: avatar.background
-                anchors.fill: avatar.background
-                anchors.margins: -PlasmaCore.Units.devicePixelRatio
-                z: 1
-                radius: height/2
-                color: "transparent"
-                border.width: avatar.visualFocus ? PlasmaCore.Units.devicePixelRatio * 2 : 0
-                border.color: PlasmaCore.Theme.buttonFocusColor
-            }
-            HoverHandler {
-                id: hoverHandler
-                cursorShape: Qt.PointingHandCursor
-            }
-            PC3.ToolTip.text: Accessible.name
-            PC3.ToolTip.visible: hovered
-            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+        // PC3.RoundButton {
+        //     id: avatar
+        //     visible: KQuickAddons.KCMShell.authorize("kcm_users.desktop").length > 0
+        //     hoverEnabled: true
+        //     Layout.fillHeight: true
+        //     Layout.minimumWidth: height
+        //     Layout.maximumWidth: height
+        //     // FIXME: Not using text with display because of RoundButton bugs in plasma-framework
+        //     // See https://bugs.kde.org/show_bug.cgi?id=440022
+        //     Accessible.name: i18n("Open user settings")
+        //     leftPadding: PlasmaCore.Units.devicePixelRatio
+        //     rightPadding: PlasmaCore.Units.devicePixelRatio
+        //     topPadding: PlasmaCore.Units.devicePixelRatio
+        //     bottomPadding: PlasmaCore.Units.devicePixelRatio
+        //     contentItem: Kirigami.Avatar {
+        //         source: kuser.faceIconUrl
+        //         name: kuser.fullName
+        //     }
+        //     Rectangle {
+        //         parent: avatar.background
+        //         anchors.fill: avatar.background
+        //         anchors.margins: -PlasmaCore.Units.devicePixelRatio
+        //         z: 1
+        //         radius: height/2
+        //         color: "transparent"
+        //         border.width: avatar.visualFocus ? PlasmaCore.Units.devicePixelRatio * 2 : 0
+        //         border.color: PlasmaCore.Theme.buttonFocusColor
+        //     }
+        //     HoverHandler {
+        //         id: hoverHandler
+        //         cursorShape: Qt.PointingHandCursor
+        //     }
+        //     PC3.ToolTip.text: Accessible.name
+        //     PC3.ToolTip.visible: hovered
+        //     PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
 
-            Keys.onLeftPressed: if (LayoutMirroring.enabled) {
-                searchField.forceActiveFocus(Qt.TabFocusReason)
-            }
-            Keys.onRightPressed: if (!LayoutMirroring.enabled) {
-                searchField.forceActiveFocus(Qt.TabFocusReason)
-            }
-            Keys.onDownPressed: if (plasmoid.rootItem.sideBar) {
-                plasmoid.rootItem.sideBar.forceActiveFocus(Qt.TabFocusReason)
-            } else {
-                plasmoid.rootItem.contentArea.forceActiveFocus(Qt.TabFocusReason)
-            }
+        //     Keys.onLeftPressed: if (LayoutMirroring.enabled) {
+        //         searchField.forceActiveFocus(Qt.TabFocusReason)
+        //     }
+        //     Keys.onRightPressed: if (!LayoutMirroring.enabled) {
+        //         searchField.forceActiveFocus(Qt.TabFocusReason)
+        //     }
+        //     Keys.onDownPressed: if (plasmoid.rootItem.sideBar) {
+        //         plasmoid.rootItem.sideBar.forceActiveFocus(Qt.TabFocusReason)
+        //     } else {
+        //         plasmoid.rootItem.contentArea.forceActiveFocus(Qt.TabFocusReason)
+        //     }
 
-            onClicked: KQuickAddons.KCMShell.openSystemSettings("kcm_users")
-        }
+        //     onClicked: KQuickAddons.KCMShell.openSystemSettings("kcm_users")
+        // }
 
         MouseArea {
             id: nameAndInfoMouseArea
