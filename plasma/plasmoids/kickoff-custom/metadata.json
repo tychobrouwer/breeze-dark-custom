@@ -18,7 +18,7 @@
         "Version": "1.0"
     },
     "X-Plasma-API": "declarativeappletscript",
-    "X-Plasma-MainScript": "ui/main.qml",
+    "X-Plasma-MainScript": "ui/Kickoff.qml",
     "X-Plasma-Provides": [
         "org.kde.plasma.launchermenu"
     ],
