@@ -32,39 +32,6 @@ FocusScope {
     implicitWidth: root.preferredSideBarWidth + separator.implicitWidth + contentAreaLoader.implicitWidth
     implicitHeight: Math.max(root.preferredSideBarHeight, contentAreaLoader.implicitHeight)
 
-    // TriangleMouseFilter {
-    //     id: sideBarFilter
-    //     anchors {
-    //         left: parent.left
-    //         top: parent.top
-    //         bottom: parent.bottom
-    //     }
-    //     implicitWidth: root.preferredSideBarWidth
-    //     implicitHeight: root.preferredSideBarHeight
-    //     edge: LayoutMirroring.enabled ? Qt.LeftEdge : Qt.RightEdge
-    //     blockFirstEnter: true
-    //     Loader {
-    //         id: sideBarLoader
-    //         anchors.fill: parent
-    //         // backtab is implicitly set by the last button in Header.qml
-    //         KeyNavigation.tab: root.contentAreaItem
-    //         KeyNavigation.right: contentAreaLoader
-    //         Keys.onUpPressed: plasmoid.rootItem.header.nextItemInFocusChain().forceActiveFocus(Qt.BacktabFocusReason)
-    //         Keys.onDownPressed: plasmoid.rootItem.footer.tabBar.forceActiveFocus(Qt.TabFocusReason)
-    //     }
-    // }
-    // PlasmaCore.SvgItem {
-    //     id: separator
-    //     anchors {
-    //         left: sideBarFilter.right
-    //         top: parent.top
-    //         bottom: parent.bottom
-    //     }
-    //     implicitWidth: naturalSize.width
-    //     implicitHeight: implicitWidth
-    //     elementId: "vertical-line"
-    //     svg: KickoffSingleton.lineSvg
-    // }
     Loader {
         id: contentAreaLoader
         focus: true
@@ -80,5 +47,38 @@ FocusScope {
         KeyNavigation.left: sideBarLoader
         Keys.onUpPressed: plasmoid.rootItem.searchField.forceActiveFocus(Qt.BacktabFocusReason)
         Keys.onDownPressed: plasmoid.rootItem.footer.leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+    }
+        PlasmaCore.SvgItem {
+        id: separator
+        anchors {
+            left: sideBarFilter.right
+            top: parent.top
+            bottom: parent.bottom
+        }
+        implicitWidth: naturalSize.width
+        implicitHeight: implicitWidth
+        elementId: "vertical-line"
+        svg: KickoffSingleton.lineSvg
+    }
+    TriangleMouseFilter {
+        id: sideBarFilter
+        anchors {
+            left: parent.left
+            top: parent.top
+            bottom: parent.bottom
+        }
+        implicitWidth: root.preferredSideBarWidth
+        implicitHeight: root.preferredSideBarHeight
+        edge: LayoutMirroring.enabled ? Qt.LeftEdge : Qt.RightEdge
+        blockFirstEnter: true
+        Loader {
+            id: sideBarLoader
+            anchors.fill: parent
+            // backtab is implicitly set by the last button in Header.qml
+            KeyNavigation.tab: root.contentAreaItem
+            KeyNavigation.right: contentAreaLoader
+            Keys.onUpPressed: plasmoid.rootItem.header.nextItemInFocusChain().forceActiveFocus(Qt.BacktabFocusReason)
+            Keys.onDownPressed: plasmoid.rootItem.footer.tabBar.forceActiveFocus(Qt.TabFocusReason)
+        }
     }
 }
