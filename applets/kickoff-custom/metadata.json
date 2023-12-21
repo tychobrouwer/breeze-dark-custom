@@ -1,0 +1,28 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "plasma-devel@kde.org",
+                "Name": "Martin Graesslin"
+            },
+            {
+                "Email": "mikel5764@gmail.com",
+                "Name": "Mikel Johnson"
+            }
+        ],
+        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=plasmashell&component=Application%20Launcher%20(Kickoff)",
+        "Category": "Application Launchers",
+        "Description": "Customized launcher to start applications",
+        "EnabledByDefault": true,
+        "Icon": "start-here-kde",
+        "Id": "org.kde.plasma.kickoff-custom",
+        "License": "GPL-2.0+",
+        "Name": "Application Launcher Custom",
+        "Website": "https://userbase.kde.org/Plasma/Kickoff"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-Provides": [
+        "org.kde.plasma.launchermenu"
+    ]
+}
