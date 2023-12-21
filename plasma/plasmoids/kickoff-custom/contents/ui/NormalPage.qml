@@ -21,13 +21,13 @@ EmptyPage {
             id: applicationsPage
             preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
         }
-        // Component {
-        //     id: placesPage
-        //     PlacesPage {
-        //         preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
-        //         preferredSideBarHeight: applicationsPage.implicitSideBarHeight
-        //     }
-        // }
+        Component {
+            id: placesPage
+            PlacesPage {
+                preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
+                preferredSideBarHeight: applicationsPage.implicitSideBarHeight
+            }
+        }
         Connections {
             target: footer.tabBar
             function onCurrentIndexChanged() {
