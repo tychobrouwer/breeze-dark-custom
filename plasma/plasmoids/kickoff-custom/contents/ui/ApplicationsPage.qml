@@ -70,7 +70,7 @@ BasePage {
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
         focus: true
-        initialItem: favoritesGridViewComponent
+        initialItem: applicationsGridViewComponent
 
         Component {
             id: favoritesListViewComponent
