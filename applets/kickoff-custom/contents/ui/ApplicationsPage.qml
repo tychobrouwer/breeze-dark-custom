@@ -109,10 +109,10 @@ BasePage {
                 hasSectionView: stackView.appsModelRow === 1
 
                 onShowSectionViewRequested: sectionName => {
-                    // stackView.push(applicationsSectionViewComponent, {
-                    //     "currentSection": sectionName,
-                    //     "parentView": applicationsListView
-                    // });
+                    stackView.push(applicationsSectionViewComponent, {
+                        "currentSection": sectionName,
+                        "parentView": applicationsListView
+                    });
                 }
             }
         }
