@@ -1,0 +1,28 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "tychobrouwer33@gmail.com",
+                "Name": "Tycho Brouwer"
+            }
+        ],
+        "Category": "Application Launchers",
+        "Description": "Customized launcher to start applications",
+        "Icon": "start-here-kde",
+        "Id": "kickoff-custom",
+        "License": "GPL-2.0+",
+        "Name": "Application Launcher Custom",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "1.0"
+    },
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/main.qml",
+    "X-Plasma-Provides": [
+        "org.kde.plasma.launchermenu"
+    ],
+    "X-Plasma-RequiredExtensions": [
+        "LaunchApp"
+    ]
+}
