@@ -231,7 +231,7 @@ EmptyPage {
             let targetX = currentItem ? currentItem.x : contentX
             let targetY = currentItem ? currentItem.y : contentY
             let targetIndex = currentIndex
-            let atFirst = currentIndex === 0
+            let atFirst = currentIndex === 1
             let atLast = currentIndex === count - 1
             if (count > 1) {
                 switch (event.key) {

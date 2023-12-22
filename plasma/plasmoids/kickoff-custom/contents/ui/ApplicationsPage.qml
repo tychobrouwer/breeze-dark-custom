@@ -67,7 +67,7 @@ BasePage {
         readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay === 0 ? applicationsGridViewComponent : applicationsListViewComponent
         // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
         // But to trigger model data update, set initial value to 0
-        property int appsModelRow: 1
+        property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
         focus: true
         initialItem: applicationsListViewComponent
