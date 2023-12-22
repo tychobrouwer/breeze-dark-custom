@@ -63,8 +63,8 @@ BasePage {
 
         // readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay === 0 ? "favoritesGridView" : "favoritesListView"
         // readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay === 0 ? favoritesGridViewComponent : favoritesListViewComponent
-        readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay === 0 ? "applicationsGridView" : "applicationsListView"
-        readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay === 0 ? applicationsGridViewComponent : applicationsListViewComponent
+        // readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay === 0 ? "applicationsGridView" : "applicationsListView"
+        // readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay === 0 ? applicationsGridViewComponent : applicationsListViewComponent
         // NOTE: The 0 index modelForRow isn't supposed to be used. That's just how it works.
         // But to trigger model data update, set initial value to 0
         property int appsModelRow: 0
@@ -143,34 +143,36 @@ BasePage {
         //         stackView.replace(stackView.preferredFavoritesViewComponent)
         //     }
         // }
-        onPreferredAppsViewComponentChanged: {
-            if (root.sideBarItem !== null && root.sideBarItem.currentIndex > 1) {
-                stackView.replace(stackView.preferredAppsViewComponent)
-            }
-        }
-
-        // Connections {
-        //     target: root.sideBarItem
-        //     function onCurrentIndexChanged() {
-        //         // Only update row index if the condition is met.
-        //         // The 0 index modelForRow isn't supposed to be used. That's just how it works.
-        //         if (root.sideBarItem.currentIndex > 0) {
-        //             appsModelRow = root.sideBarItem.currentIndex
-        //         }
-        //         if (root.sideBarItem.currentIndex === 0
-        //             && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
-        //             stackView.replace(stackView.preferredFavoritesViewComponent)
-        //         } else if (root.sideBarItem.currentIndex === 1
-        //             && stackView.currentItem.objectName !== "applicationsListView") {
-        //             // Always use list view for alphabetical apps view since grid view doesn't have sections
-        //             // TODO: maybe find a way to have a list view with grids in each section?
-        //             stackView.replace(applicationsListViewComponent)
-        //         } else if (root.sideBarItem.currentIndex > 1
-        //             && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
-        //             stackView.replace(stackView.preferredAppsViewComponent)
-        //         }
+        // onPreferredAppsViewComponentChanged: {
+        //     if (root.sideBarItem !== null && root.sideBarItem.currentIndex > 1) {
+        //         stackView.replace(stackView.preferredAppsViewComponent)
         //     }
         // }
+
+        Connections {
+            target: root.sideBarItem
+            function onCurrentIndexChanged() {
+                // Only update row index if the condition is met.
+                // The 0 index modelForRow isn't supposed to be used. That's just how it works.
+                if (root.sideBarItem.currentIndex > 0) {
+                    appsModelRow = root.sideBarItem.currentIndex
+                }
+                // if (root.sideBarItem.currentIndex === 0
+                //     && stackView.currentItem.objectName !== stackView.preferredFavoritesViewObjectName) {
+                //     stackView.replace(stackView.preferredFavoritesViewComponent)
+                // } else 
+                if (root.sideBarItem.currentIndex === 1
+                    && stackView.currentItem.objectName !== "applicationsListView") {
+                    // Always use list view for alphabetical apps view since grid view doesn't have sections
+                    // TODO: maybe find a way to have a list view with grids in each section?
+                    stackView.replace(applicationsListViewComponent)
+                } 
+                // else if (root.sideBarItem.currentIndex > 1
+                //     && stackView.currentItem.objectName !== stackView.preferredAppsViewObjectName) {
+                //     stackView.replace(stackView.preferredAppsViewComponent)
+                // }
+            }
+        }
         Connections {
             target: plasmoid
             function onExpandedChanged() {
