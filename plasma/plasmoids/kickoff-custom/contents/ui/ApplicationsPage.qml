@@ -52,7 +52,6 @@ BasePage {
 
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
-        stackView.replace(applicationsListViewComponent)
         focus: true
         initialItem: applicationsListViewComponent
 
