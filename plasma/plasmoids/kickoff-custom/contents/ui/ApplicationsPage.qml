@@ -13,17 +13,17 @@ import org.kde.plasma.private.kicker 0.1 as Kicker
 
 BasePage {
     id: root
-    sideBarComponent: KickoffListView {
-        id: sideBar
-        focus: true // needed for Loaders
-        model: plasmoid.rootItem.rootModel
-        // needed otherwise app displayed at top-level will show a first character as group.
-        section.property: ""
-        delegate: KickoffListDelegate {
-            width: view.availableWidth
-            isCategoryListItem: true
-        }
-    }
+    // sideBarComponent: KickoffListView {
+    //     id: sideBar
+    //     focus: true // needed for Loaders
+    //     model: plasmoid.rootItem.rootModel
+    //     // needed otherwise app displayed at top-level will show a first character as group.
+    //     section.property: ""
+    //     delegate: KickoffListDelegate {
+    //         width: view.availableWidth
+    //         isCategoryListItem: true
+    //     }
+    // }
     contentAreaComponent: VerticalStackView {
         id: stackView
 
@@ -111,22 +111,22 @@ BasePage {
             }
         }
 
-        Connections {
-            target: root.sideBarItem
-            function onCurrentIndexChanged() {
-                // Only update row index if the condition is met.
-                // The 0 index modelForRow isn't supposed to be used. That's just how it works.
-                if (root.sideBarItem.currentIndex > 0) {
-                    appsModelRow = root.sideBarItem.currentIndex
-                }
-                if (root.sideBarItem.currentIndex === 1
-                    && stackView.currentItem.objectName !== "applicationsListView") {
-                    // Always use list view for alphabetical apps view since grid view doesn't have sections
-                    // TODO: maybe find a way to have a list view with grids in each section?
-                    stackView.replace(applicationsListViewComponent)
-                } 
-            }
-        }
+        // Connections {
+        //     target: root.sideBarItem
+        //     function onCurrentIndexChanged() {
+        //         // Only update row index if the condition is met.
+        //         // The 0 index modelForRow isn't supposed to be used. That's just how it works.
+        //         if (root.sideBarItem.currentIndex > 0) {
+        //             appsModelRow = root.sideBarItem.currentIndex
+        //         }
+        //         if (root.sideBarItem.currentIndex === 1
+        //             && stackView.currentItem.objectName !== "applicationsListView") {
+        //             // Always use list view for alphabetical apps view since grid view doesn't have sections
+        //             // TODO: maybe find a way to have a list view with grids in each section?
+        //             stackView.replace(applicationsListViewComponent)
+        //         } 
+        //     }
+        // }
         Connections {
             target: plasmoid
             function onExpandedChanged() {
@@ -139,13 +139,13 @@ BasePage {
     // NormalPage doesn't get destroyed when deactivated, so the binding uses
     // StackView.status and visible. This way the bindings are reset when
     // NormalPage is Activated again.
-    Binding {
-        target: plasmoid.rootItem
-        property: "sideBar"
-        value: root.sideBarItem
-        when: root.T.StackView.status === T.StackView.Active && root.visible
-        restoreMode: Binding.RestoreBinding
-    }
+    // Binding {
+    //     target: plasmoid.rootItem
+    //     property: "sideBar"
+    //     value: root.sideBarItem
+    //     when: root.T.StackView.status === T.StackView.Active && root.visible
+    //     restoreMode: Binding.RestoreBinding
+    // }
     Binding {
         target: plasmoid.rootItem
         property: "contentArea"
