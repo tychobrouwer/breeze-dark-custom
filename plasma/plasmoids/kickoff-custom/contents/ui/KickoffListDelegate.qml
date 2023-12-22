@@ -38,68 +38,68 @@ AbstractKickoffItemDelegate {
 
     dragIconItem: icon
 
-    // contentItem: RowLayout {
-    //     id: row
-    //     spacing: KickoffSingleton.listItemMetrics.margins.left * 2
+    contentItem: RowLayout {
+        id: row
+        spacing: KickoffSingleton.listItemMetrics.margins.left * 2
 
-    //     PlasmaCore.IconItem {
-    //         id: icon
-    //         implicitWidth: root.icon.width
-    //         implicitHeight: root.icon.height
-    //         Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+        PlasmaCore.IconItem {
+            id: icon
+            implicitWidth: root.icon.width
+            implicitHeight: root.icon.height
+            Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
 
-    //         animated: false
-    //         usesPlasmaTheme: false
+            animated: false
+            usesPlasmaTheme: false
 
-    //         source: root.decoration || root.icon.name || root.icon.source
-    //     }
+            source: root.decoration || root.icon.name || root.icon.source
+        }
 
-    //     GridLayout {
-    //         id: gridLayout
-    //         Layout.fillWidth: true
+        GridLayout {
+            id: gridLayout
+            Layout.fillWidth: true
 
-    //         rows: root.compact ? 1 : 2
-    //         columns: root.compact ? 2 : 1
-    //         rowSpacing: 0
-    //         columnSpacing: root.spacing
+            rows: root.compact ? 1 : 2
+            columns: root.compact ? 2 : 1
+            rowSpacing: 0
+            columnSpacing: root.spacing
 
-    //         PC3.Label {
-    //             id: label
-    //             Layout.fillWidth: !descriptionLabel.visible
-    //             Layout.maximumWidth: root.width - root.leftPadding - root.rightPadding - icon.width - row.spacing
-    //             Layout.preferredHeight: {
-    //                 if (root.isCategoryListItem) {
-    //                     return root.compact ? implicitHeight : Math.round(implicitHeight * 1.5);
-    //                 }
-    //                 if (!root.compact && !descriptionLabel.visible) {
-    //                     return implicitHeight * 2;
-    //                 }
-    //                 return implicitHeight;
-    //             }
-    //             text: root.text
-    //             textFormat: Text.PlainText
-    //             elide: Text.ElideRight
-    //             verticalAlignment: Text.AlignVCenter
-    //             maximumLineCount: 1
-    //         }
+            PC3.Label {
+                id: label
+                Layout.fillWidth: !descriptionLabel.visible
+                Layout.maximumWidth: root.width - root.leftPadding - root.rightPadding - icon.width - row.spacing
+                Layout.preferredHeight: {
+                    if (root.isCategoryListItem) {
+                        return root.compact ? implicitHeight : Math.round(implicitHeight * 1.5);
+                    }
+                    if (!root.compact && !descriptionLabel.visible) {
+                        return implicitHeight * 2;
+                    }
+                    return implicitHeight;
+                }
+                text: root.text
+                textFormat: Text.PlainText
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+                maximumLineCount: 1
+            }
 
-    //         PC3.Label {
-    //             id: descriptionLabel
-    //             Layout.fillWidth: true
-    //             // Don't want to show descriptions for apps in the category list, because
-    //             // there's not enough room for them with the category list item height
-    //             visible: text.length > 0 && text !== root.text && !root.isCategoryListItem
-    //             enabled: false
-    //             text: root.description
-    //             textFormat: Text.PlainText
-    //             font: PlasmaCore.Theme.smallestFont
-    //             elide: Text.ElideRight
-    //             verticalAlignment: Text.AlignVCenter
-    //             horizontalAlignment: root.compact ? Text.AlignRight : Text.AlignLeft
-    //             maximumLineCount: 1
-    //         }
-    //     }
-    // }
+            PC3.Label {
+                id: descriptionLabel
+                Layout.fillWidth: true
+                // Don't want to show descriptions for apps in the category list, because
+                // there's not enough room for them with the category list item height
+                visible: text.length > 0 && text !== root.text && !root.isCategoryListItem
+                enabled: false
+                text: root.description
+                textFormat: Text.PlainText
+                font: PlasmaCore.Theme.smallestFont
+                elide: Text.ElideRight
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: root.compact ? Text.AlignRight : Text.AlignLeft
+                maximumLineCount: 1
+            }
+        }
+    }
 
     Loader {
         id: separatorLoader

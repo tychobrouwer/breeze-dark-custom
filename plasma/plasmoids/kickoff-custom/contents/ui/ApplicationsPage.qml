@@ -20,7 +20,7 @@ BasePage {
         // needed otherwise app displayed at top-level will show a first character as group.
         section.property: ""
         delegate: KickoffListDelegate {
-            width: 0
+            width: view.availableWidth
             isCategoryListItem: true
         }
     }
