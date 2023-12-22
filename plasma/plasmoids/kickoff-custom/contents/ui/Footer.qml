@@ -148,37 +148,37 @@ PlasmaExtras.PlasmoidHeading {
     // MouseArea doesn't keep track to the total amount of rotation.
     // Keeping track of the total amount of rotation makes it work
     // better for touch pads.
-    Item {
-        id: mouseItem
-        parent: root
-        anchors.left: parent.left
-        height: root.height
-        width: tabBar.width
-        z: 1 // Has to be above contentItem to receive mouse wheel events
-        WheelHandler {
-            id: tabScrollHandler
-            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-            onWheel: {
-                let shouldDec = rotation >= 15
-                let shouldInc = rotation <= -15
-                let shouldReset = (rotation > 0 && tabBar.currentIndex === 0) || (rotation < 0 && tabBar.currentIndex === tabBar.count - 1)
-                if (shouldDec) {
-                    tabBar.decrementCurrentIndex();
-                    rotation = 0
-                } else if (shouldInc) {
-                    tabBar.incrementCurrentIndex();
-                    rotation = 0
-                } else if (shouldReset) {
-                    rotation = 0
-                }
-            }
-        }
-    }
+    // Item {
+    //     id: mouseItem
+    //     parent: root
+    //     anchors.left: parent.left
+    //     height: root.height
+    //     width: tabBar.width
+    //     z: 1 // Has to be above contentItem to receive mouse wheel events
+    //     WheelHandler {
+    //         id: tabScrollHandler
+    //         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+    //         onWheel: {
+    //             let shouldDec = rotation >= 15
+    //             let shouldInc = rotation <= -15
+    //             let shouldReset = (rotation > 0 && tabBar.currentIndex === 0) || (rotation < 0 && tabBar.currentIndex === tabBar.count - 1)
+    //             if (shouldDec) {
+    //                 tabBar.decrementCurrentIndex();
+    //                 rotation = 0
+    //             } else if (shouldInc) {
+    //                 tabBar.incrementCurrentIndex();
+    //                 rotation = 0
+    //             } else if (shouldReset) {
+    //                 rotation = 0
+    //             }
+    //         }
+    //     }
+    // }
 
-    Shortcut {
-        sequences: ["Ctrl+Tab", "Ctrl+Shift+Tab", StandardKey.NextChild, StandardKey.PreviousChild]
-        onActivated: {
-            tabBar.currentIndex = (tabBar.currentIndex === 0) ? 1 : 0;
-        }
-    }
+    // Shortcut {
+    //     sequences: ["Ctrl+Tab", "Ctrl+Shift+Tab", StandardKey.NextChild, StandardKey.PreviousChild]
+    //     onActivated: {
+    //         tabBar.currentIndex = (tabBar.currentIndex === 0) ? 1 : 0;
+    //     }
+    // }
 }
