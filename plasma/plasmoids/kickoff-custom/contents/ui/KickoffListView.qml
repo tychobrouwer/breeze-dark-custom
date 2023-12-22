@@ -130,9 +130,9 @@ EmptyPage {
             prefix: "hover"
         }
 
-        // delegate: KickoffListDelegate {
-        //     width: view.availableWidth
-        // }
+        delegate: KickoffListDelegate {
+            width: view.availableWidth
+        }
 
         // section {
         //     property: "group"
