@@ -11,7 +11,7 @@ import org.kde.plasma.components 3.0 as PC3
 
 EmptyPage {
     id: root
-    property real preferredSideBarWidth: Math.max(footer.tabBar.implicitWidth, applicationsPage.implicitSideBarWidth)
+    // property real preferredSideBarWidth: Math.max(footer.tabBar.implicitWidth, applicationsPage.implicitSideBarWidth)
 
     contentItem: HorizontalStackView {
         id: stackView
@@ -19,7 +19,7 @@ EmptyPage {
         reverseTransitions: footer.tabBar.currentIndex === 1
         initialItem: ApplicationsPage {
             id: applicationsPage
-            preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
+            // preferredSideBarWidth: root.preferredSideBarWidth + plasmoid.rootItem.backgroundMetrics.leftPadding
         }
         // Component {
         //     id: placesPage
@@ -42,7 +42,7 @@ EmptyPage {
 
     footer: Footer {
         id: footer
-        preferredTabBarWidth: root.preferredSideBarWidth
+        // preferredTabBarWidth: root.preferredSideBarWidth
         Binding {
             target: plasmoid.rootItem
             property: "footer"

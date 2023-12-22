@@ -149,7 +149,7 @@ PlasmaExtras.PlasmoidHeading {
                 leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
             }
         }
-        Keys.onUpPressed: plasmoid.rootItem.sideBar.forceActiveFocus(Qt.BacktabFocusReason)
+        // Keys.onUpPressed: plasmoid.rootItem.sideBar.forceActiveFocus(Qt.BacktabFocusReason)
     }
 
     LeaveButtons {

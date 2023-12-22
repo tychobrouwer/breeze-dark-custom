@@ -199,11 +199,7 @@ PlasmaExtras.PlasmoidHeading {
                 restoreMode: Binding.RestoreNone
             }
             KeyNavigation.backtab: configureButton
-            KeyNavigation.tab: if (plasmoid.rootItem.sideBar) {
-                return plasmoid.rootItem.sideBar
-            } else {
-                return nextItemInFocusChain()
-            }
+            KeyNavigation.tab: nextItemInFocusChain()
             Keys.onLeftPressed: if (!LayoutMirroring.enabled) {
                 nextItemInFocusChain(false).forceActiveFocus(Qt.BacktabFocusReason)
             }

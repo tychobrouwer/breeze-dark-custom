@@ -108,7 +108,7 @@ Item {
     property PC3.TextField searchField: null
 
     // Set in FullRepresentation.qml, ApplicationPage.qml, PlacesPage.qml
-    property Item sideBar: null // is null when searching
+    // property Item sideBar: null // is null when searching
     property Item contentArea: null // is searchView when searching
 
     // Set in NormalPage.qml
@@ -146,7 +146,7 @@ Item {
     }
 
     // Used to show smaller Kickoff on small screens
-    readonly property int minimumGridRowCount: Math.min(Screen.desktopAvailableWidth, Screen.desktopAvailableHeight) * Screen.devicePixelRatio < KickoffSingleton.gridCellSize * 4 + (Plasmoid.fullRepresentationItem ? Plasmoid.fullRepresentationItem.normalPage.preferredSideBarWidth : KickoffSingleton.gridCellSize * 2) ? 2 : 4
+    readonly property int minimumGridRowCount: Math.min(Screen.desktopAvailableWidth, Screen.desktopAvailableHeight) * Screen.devicePixelRatio < KickoffSingleton.gridCellSize * 4 + KickoffSingleton.gridCellSize * 2 ? 2 : 4
     //END
 
     Plasmoid.switchWidth: plasmoid.fullRepresentationItem ? plasmoid.fullRepresentationItem.Layout.minimumWidth : -1
