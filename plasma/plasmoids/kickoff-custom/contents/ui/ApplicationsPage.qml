@@ -143,11 +143,11 @@ BasePage {
         //         stackView.replace(stackView.preferredFavoritesViewComponent)
         //     }
         // }
-        // onPreferredAppsViewComponentChanged: {
-        //     if (root.sideBarItem !== null && root.sideBarItem.currentIndex > 1) {
-        //         stackView.replace(stackView.preferredAppsViewComponent)
-        //     }
-        // }
+        onPreferredAppsViewComponentChanged: {
+            if (root.sideBarItem !== null && root.sideBarItem.currentIndex > 1) {
+                stackView.replace(stackView.preferredAppsViewComponent)
+            }
+        }
 
         // Connections {
         //     target: root.sideBarItem
