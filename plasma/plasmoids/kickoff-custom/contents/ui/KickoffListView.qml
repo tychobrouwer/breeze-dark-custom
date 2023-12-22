@@ -104,7 +104,7 @@ EmptyPage {
         leftMargin: plasmoid.rootItem.backgroundMetrics.leftPadding
         rightMargin: plasmoid.rootItem.backgroundMetrics.rightPadding
 
-        currentIndex: count > 0 ? 0 : -1
+        currentIndex: count > 0 ? 1 : -1
         focus: true
         interactive: height < contentHeight
         pixelAligned: true
@@ -206,7 +206,7 @@ EmptyPage {
             target: plasmoid
             function onExpandedChanged() {
                 if (plasmoid.expanded) {
-                    view.currentIndex = 0
+                    view.currentIndex = 1
                     view.positionViewAtBeginning()
                 }
             }
