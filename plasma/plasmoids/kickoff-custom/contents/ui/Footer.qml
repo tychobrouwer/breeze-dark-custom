@@ -35,94 +35,94 @@ PlasmaExtras.PlasmoidHeading {
     spacing: plasmoid.rootItem.backgroundMetrics.spacing
     position: PC3.ToolBar.Footer
 
-    PC3.TabBar {
-        id: tabBar
-        property real tabWidth: applicationsTab.implicitWidth
-        focus: true
-        width: root.preferredTabBarWidth > 0 ? root.preferredTabBarWidth : implicitWidth
-        implicitWidth: contentWidth + leftPadding + rightPadding
-        implicitHeight: contentHeight + topPadding + bottomPadding
+    // PC3.TabBar {
+    //     id: tabBar
+    //     property real tabWidth: applicationsTab.implicitWidth
+    //     focus: true
+    //     width: root.preferredTabBarWidth > 0 ? root.preferredTabBarWidth : implicitWidth
+    //     implicitWidth: contentWidth + leftPadding + rightPadding
+    //     implicitHeight: contentHeight + topPadding + bottomPadding
 
-        // This is needed to keep the sparators horizontally aligned
-        leftPadding: mirrored ? root.spacing : 0
-        rightPadding: !mirrored ? root.spacing : 0
+    //     // This is needed to keep the sparators horizontally aligned
+    //     leftPadding: mirrored ? root.spacing : 0
+    //     rightPadding: !mirrored ? root.spacing : 0
 
-        anchors {
-            left: parent.left
-            top: parent.top
-            bottom:parent.bottom
-        }
+    //     anchors {
+    //         left: parent.left
+    //         top: parent.top
+    //         bottom:parent.bottom
+    //     }
 
-        position: PC3.TabBar.Footer
+    //     position: PC3.TabBar.Footer
 
-        contentItem: ListView {
-            id: tabBarListView
-            focus: true
-            model: tabBar.contentModel
-            currentIndex: tabBar.currentIndex
+    //     contentItem: ListView {
+    //         id: tabBarListView
+    //         focus: true
+    //         model: tabBar.contentModel
+    //         currentIndex: tabBar.currentIndex
 
-            spacing: tabBar.spacing
-            orientation: ListView.Horizontal
-            boundsBehavior: Flickable.StopAtBounds
-            flickableDirection: Flickable.AutoFlickIfNeeded
-            snapMode: ListView.SnapToItem
+    //         spacing: tabBar.spacing
+    //         orientation: ListView.Horizontal
+    //         boundsBehavior: Flickable.StopAtBounds
+    //         flickableDirection: Flickable.AutoFlickIfNeeded
+    //         snapMode: ListView.SnapToItem
 
-            highlightMoveDuration: PlasmaCore.Units.longDuration
-            highlightRangeMode: ListView.ApplyRange
-            preferredHighlightBegin: tabBar.tabWidth
-            preferredHighlightEnd: width - tabBar.tabWidth
-            highlight: PlasmaCore.FrameSvgItem {
-                anchors.top: tabBarListView.contentItem.top
-                anchors.bottom: tabBarListView.contentItem.bottom
-                anchors.topMargin: -root.topPadding
-                anchors.bottomMargin: -root.bottomPadding
-                imagePath: "widgets/tabbar"
-                prefix: tabBar.position === PC3.TabBar.Header ? "north-active-tab" : "south-active-tab"
-                colorGroup: PlasmaCore.ColorScope.colorGroup
-            }
-            keyNavigationEnabled: false
-        }
+    //         highlightMoveDuration: PlasmaCore.Units.longDuration
+    //         highlightRangeMode: ListView.ApplyRange
+    //         preferredHighlightBegin: tabBar.tabWidth
+    //         preferredHighlightEnd: width - tabBar.tabWidth
+    //         highlight: PlasmaCore.FrameSvgItem {
+    //             anchors.top: tabBarListView.contentItem.top
+    //             anchors.bottom: tabBarListView.contentItem.bottom
+    //             anchors.topMargin: -root.topPadding
+    //             anchors.bottomMargin: -root.bottomPadding
+    //             imagePath: "widgets/tabbar"
+    //             prefix: tabBar.position === PC3.TabBar.Header ? "north-active-tab" : "south-active-tab"
+    //             colorGroup: PlasmaCore.ColorScope.colorGroup
+    //         }
+    //         keyNavigationEnabled: false
+    //     }
 
-        Connections {
-            target: plasmoid
-            function onExpandedChanged() {
-                if (plasmoid.expanded) {
-                    tabBar.currentIndex = 0
-                }
-            }
-        }
+    //     Connections {
+    //         target: plasmoid
+    //         function onExpandedChanged() {
+    //             if (plasmoid.expanded) {
+    //                 tabBar.currentIndex = 0
+    //             }
+    //         }
+    //     }
 
-        Keys.onLeftPressed: {
-            let moved = false
-            if (LayoutMirroring.enabled && currentIndex === 0) {
-                incrementCurrentIndex()
-                currentItem.forceActiveFocus(Qt.TabFocusReason)
-                moved = true
-            } else if (currentIndex === 1) {
-                decrementCurrentIndex()
-                currentItem.forceActiveFocus(Qt.BacktabFocusReason)
-                moved = true
-            }
-            if (!moved && currentIndex === 1) {
-                leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            }
-        }
-        Keys.onRightPressed: {
-            let moved = false
-            if (LayoutMirroring.enabled && currentIndex === 1) {
-                decrementCurrentIndex()
-                currentItem.forceActiveFocus(Qt.BacktabFocusReason)
-                moved = true
-            } else if (currentIndex === 0) {
-                incrementCurrentIndex()
-                currentItem.forceActiveFocus(Qt.TabFocusReason)
-                moved = true
-            }
-            if (!moved && currentIndex === 1) {
-                leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
-            }
-        }
-    }
+    //     Keys.onLeftPressed: {
+    //         let moved = false
+    //         if (LayoutMirroring.enabled && currentIndex === 0) {
+    //             incrementCurrentIndex()
+    //             currentItem.forceActiveFocus(Qt.TabFocusReason)
+    //             moved = true
+    //         } else if (currentIndex === 1) {
+    //             decrementCurrentIndex()
+    //             currentItem.forceActiveFocus(Qt.BacktabFocusReason)
+    //             moved = true
+    //         }
+    //         if (!moved && currentIndex === 1) {
+    //             leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+    //         }
+    //     }
+    //     Keys.onRightPressed: {
+    //         let moved = false
+    //         if (LayoutMirroring.enabled && currentIndex === 1) {
+    //             decrementCurrentIndex()
+    //             currentItem.forceActiveFocus(Qt.BacktabFocusReason)
+    //             moved = true
+    //         } else if (currentIndex === 0) {
+    //             incrementCurrentIndex()
+    //             currentItem.forceActiveFocus(Qt.TabFocusReason)
+    //             moved = true
+    //         }
+    //         if (!moved && currentIndex === 1) {
+    //             leaveButtons.nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
+    //         }
+    //     }
+    // }
 
     LeaveButtons {
         id: leaveButtons
