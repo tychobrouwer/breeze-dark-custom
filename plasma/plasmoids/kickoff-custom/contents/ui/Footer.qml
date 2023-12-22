@@ -14,11 +14,11 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 PlasmaExtras.PlasmoidHeading {
     id: root
 
-    readonly property alias tabBar: tabBar
+    // readonly property alias tabBar: tabBar
     property real preferredTabBarWidth: 0
     readonly property alias leaveButtons: leaveButtons
 
-    contentWidth: tabBar.implicitWidth + root.spacing
+    // contentWidth: tabBar.implicitWidth + root.spacing
     contentHeight: leaveButtons.implicitHeight
 
     // We use an increased vertical padding to improve touch usability
@@ -132,7 +132,7 @@ PlasmaExtras.PlasmoidHeading {
             bottom: parent.bottom
             leftMargin: root.spacing
         }
-        shouldCollapseButtons: root.contentWidth + root.spacing + buttonImplicitWidth > root.width
+        shouldCollapseButtons: false
         Keys.onUpPressed: plasmoid.rootItem.contentArea.forceActiveFocus(Qt.BacktabFocusReason)
     }
 
