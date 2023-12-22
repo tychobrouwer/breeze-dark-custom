@@ -13,6 +13,7 @@ import org.kde.plasma.private.kicker 0.1 as Kicker
 
 BasePage {
     id: root
+    // sideBarComonent: {}
     // sideBarComponent: KickoffListView {
     //     id: sideBar
     //     focus: true // needed for Loaders
