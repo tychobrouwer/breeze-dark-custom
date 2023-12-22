@@ -21,7 +21,7 @@ FocusScope {
     property real preferredSideBarWidth: implicitSideBarWidth
     property real preferredSideBarHeight: implicitSideBarHeight
 
-    // property alias sideBarComponent: sideBarLoader.sourceComponent
+    property alias sideBarComponent: sideBarLoader.sourceComponent
     property alias sideBarItem: sideBarLoader.item
     property alias contentAreaComponent: contentAreaLoader.sourceComponent
     property alias contentAreaItem: contentAreaLoader.item
