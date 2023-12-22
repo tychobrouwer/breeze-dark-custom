@@ -134,43 +134,43 @@ EmptyPage {
             width: view.availableWidth
         }
 
-        // section {
-        //     property: "group"
-        //     criteria: ViewSection.FullString
-        //     delegate: PC3.AbstractButton {
-        //         width: view.availableWidth
-        //         height: KickoffSingleton.compactListDelegateHeight
+        section {
+            property: "group"
+            criteria: ViewSection.FullString
+            delegate: PC3.AbstractButton {
+                width: view.availableWidth
+                height: KickoffSingleton.compactListDelegateHeight
 
-        //         PC3.Label {
-        //             id: contentLabel
-        //             anchors.left: parent.left
-        //             width: section.length === 1
-        //                 ? KickoffSingleton.compactListDelegateContentHeight + leftPadding + rightPadding
-        //                 : parent.width
-        //             height: parent.height
-        //             leftPadding: view.effectiveLayoutDirection === Qt.LeftToRight
-        //                 ? KickoffSingleton.listItemMetrics.margins.left : 0
-        //             rightPadding: view.effectiveLayoutDirection === Qt.RightToLeft
-        //                 ? KickoffSingleton.listItemMetrics.margins.right : 0
-        //             horizontalAlignment: section.length === 1 ? Text.AlignHCenter : Text.AlignLeft
-        //             verticalAlignment: Text.AlignVCenter
-        //             maximumLineCount: 1
-        //             elide: Text.ElideRight
-        //             font.pixelSize: KickoffSingleton.compactListDelegateContentHeight
-        //             enabled: hoverHandler.hovered
-        //             text: section.length === 1 ? section.toUpperCase() : section
-        //             textFormat: Text.PlainText
-        //         }
+                PC3.Label {
+                    id: contentLabel
+                    anchors.left: parent.left
+                    width: section.length === 1
+                        ? KickoffSingleton.compactListDelegateContentHeight + leftPadding + rightPadding
+                        : parent.width
+                    height: parent.height
+                    leftPadding: view.effectiveLayoutDirection === Qt.LeftToRight
+                        ? KickoffSingleton.listItemMetrics.margins.left : 0
+                    rightPadding: view.effectiveLayoutDirection === Qt.RightToLeft
+                        ? KickoffSingleton.listItemMetrics.margins.right : 0
+                    horizontalAlignment: section.length === 1 ? Text.AlignHCenter : Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    maximumLineCount: 1
+                    elide: Text.ElideRight
+                    font.pixelSize: KickoffSingleton.compactListDelegateContentHeight
+                    enabled: hoverHandler.hovered
+                    text: section.length === 1 ? section.toUpperCase() : section
+                    textFormat: Text.PlainText
+                }
 
-        //         HoverHandler {
-        //             id: hoverHandler
-        //             enabled: root.hasSectionView
-        //             cursorShape: enabled ? Qt.PointingHandCursor : undefined
-        //         }
+                HoverHandler {
+                    id: hoverHandler
+                    enabled: root.hasSectionView
+                    cursorShape: enabled ? Qt.PointingHandCursor : undefined
+                }
 
-        //         onClicked: root.showSectionViewRequested(contentLabel.text)
-        //     }
-        // }
+                onClicked: root.showSectionViewRequested(contentLabel.text)
+            }
+        }
 
         move: normalTransition
         moveDisplaced: normalTransition
@@ -184,23 +184,23 @@ EmptyPage {
             }
         }
 
-        // PC3.ScrollBar.vertical: PC3.ScrollBar {
-        //     id: verticalScrollBar
-        //     parent: root
-        //     z: 2
-        //     height: root.height
-        //     anchors.right: parent.right
-        // }
+        PC3.ScrollBar.vertical: PC3.ScrollBar {
+            id: verticalScrollBar
+            parent: root
+            z: 2
+            height: root.height
+            anchors.right: parent.right
+        }
 
-        // Kirigami.WheelHandler {
-        //     target: view
-        //     filterMouseEvents: true
-        //     // `20 * Qt.styleHints.wheelScrollLines` is the default speed.
-        //     // `* PlasmaCore.Units.devicePixelRatio` is needed on X11
-        //     // because Plasma doesn't support Qt scaling.
-        //     horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
-        //     verticalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
-        // }
+        Kirigami.WheelHandler {
+            target: view
+            filterMouseEvents: true
+            // `20 * Qt.styleHints.wheelScrollLines` is the default speed.
+            // `* PlasmaCore.Units.devicePixelRatio` is needed on X11
+            // because Plasma doesn't support Qt scaling.
+            horizontalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
+            verticalStepSize: 20 * Qt.styleHints.wheelScrollLines * PlasmaCore.Units.devicePixelRatio
+        }
 
         Connections {
             target: plasmoid
