@@ -21,9 +21,6 @@ EmptyPage {
         }
         Connections {
             target: footer.tabBar
-            function onCurrentIndexChanged() {
-                stackView.replace(applicationsPage)
-            }
         }
     }
 

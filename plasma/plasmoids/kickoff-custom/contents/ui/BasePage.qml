@@ -26,7 +26,7 @@ FocusScope {
         id: contentAreaLoader
         focus: true
         anchors {
-            left: separator.right
+            left: parent.left
             right: parent.right
             top: parent.top
             bottom: parent.bottom
