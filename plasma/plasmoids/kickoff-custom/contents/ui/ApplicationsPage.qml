@@ -61,7 +61,7 @@ BasePage {
             }
         }
 
-        readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay === 0 ? "favoritesGridView" : "favoritesListView"
+        // readonly property string preferredFavoritesViewObjectName: plasmoid.configuration.favoritesDisplay === 0 ? "favoritesGridView" : "favoritesListView"
         // readonly property Component preferredFavoritesViewComponent: plasmoid.configuration.favoritesDisplay === 0 ? favoritesGridViewComponent : favoritesListViewComponent
         readonly property string preferredAppsViewObjectName: plasmoid.configuration.applicationsDisplay === 0 ? "applicationsGridView" : "applicationsListView"
         readonly property Component preferredAppsViewComponent: plasmoid.configuration.applicationsDisplay === 0 ? applicationsGridViewComponent : applicationsListViewComponent
