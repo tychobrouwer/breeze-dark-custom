@@ -107,8 +107,6 @@ Item {
     // Set in Header.qml
     property PC3.TextField searchField: null
 
-    // Set in FullRepresentation.qml, ApplicationPage.qml, PlacesPage.qml
-    // property Item sideBar: null // is null when searching
     property Item contentArea: null // is searchView when searching
 
     // Set in NormalPage.qml

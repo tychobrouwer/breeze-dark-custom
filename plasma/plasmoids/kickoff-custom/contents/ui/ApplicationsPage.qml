@@ -13,18 +13,6 @@ import org.kde.plasma.private.kicker 0.1 as Kicker
 
 BasePage {
     id: root
-    // sideBarComonent: {}
-    // sideBarComponent: KickoffListView {
-    //     id: sideBar
-    //     focus: true // needed for Loaders
-    //     model: plasmoid.rootItem.rootModel
-    //     // needed otherwise app displayed at top-level will show a first character as group.
-    //     section.property: ""
-    //     delegate: KickoffListDelegate {
-    //         width: view.availableWidth
-    //         isCategoryListItem: true
-    //     }
-    // }
     contentAreaComponent: VerticalStackView {
         id: stackView
 
@@ -64,6 +52,7 @@ BasePage {
 
         property int appsModelRow: 0
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
+        stackView.replace(applicationsListViewComponent)
         focus: true
         initialItem: applicationsListViewComponent
 
@@ -103,15 +92,6 @@ BasePage {
             }
         }
 
-        Component {
-            id: applicationsGridViewComponent
-            KickoffGridView {
-                id: applicationsGridView
-                objectName: "applicationsGridView"
-                model: stackView.appsModel
-            }
-        }
-
         // Connections {
         //     target: root.sideBarItem
         //     function onCurrentIndexChanged() {
@@ -137,16 +117,6 @@ BasePage {
             }
         }
     }
-    // NormalPage doesn't get destroyed when deactivated, so the binding uses
-    // StackView.status and visible. This way the bindings are reset when
-    // NormalPage is Activated again.
-    // Binding {
-    //     target: plasmoid.rootItem
-    //     property: "sideBar"
-    //     value: root.sideBarItem
-    //     when: root.T.StackView.status === T.StackView.Active && root.visible
-    //     restoreMode: Binding.RestoreBinding
-    // }
     Binding {
         target: plasmoid.rootItem
         property: "contentArea"

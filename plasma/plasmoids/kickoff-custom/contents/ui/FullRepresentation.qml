@@ -64,7 +64,6 @@ EmptyPage {
 
     header: Header {
         id: header
-        // preferredNameAndIconWidth: normalPage.preferredSideBarWidth
         Binding {
             target: plasmoid.rootItem
             property: "header"
@@ -101,7 +100,6 @@ EmptyPage {
                 // always focus the first item in the header focus chain
                 KeyNavigation.tab: root.header.nextItemInFocusChain()
                 T.StackView.onActivated: {
-                    // plasmoid.rootItem.sideBar = null
                     plasmoid.rootItem.contentArea = searchView
                 }
 
