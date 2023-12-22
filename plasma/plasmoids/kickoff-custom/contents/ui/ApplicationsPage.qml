@@ -19,10 +19,10 @@ BasePage {
         model: plasmoid.rootItem.rootModel
         // needed otherwise app displayed at top-level will show a first character as group.
         section.property: ""
-        delegate: KickoffListDelegate {
-            width: view.availableWidth
-            isCategoryListItem: true
-        }
+        // delegate: KickoffListDelegate {
+        //     width: view.availableWidth
+        //     isCategoryListItem: true
+        // }
     }
     contentAreaComponent: VerticalStackView {
         id: stackView
