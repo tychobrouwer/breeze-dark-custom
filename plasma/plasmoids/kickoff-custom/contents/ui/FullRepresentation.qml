@@ -124,40 +124,17 @@ Item {
 
         PlasmaComponents.TabGroup {
             id: mainTabGroup
-            currentTab: favoritesPage
+            currentTab: applicationsPage
 
             anchors {
                 fill: parent
             }
 
             //pages
-            FavoritesView {
-                id: favoritesPage
-            }
             PlasmaExtras.ConditionalLoader {
                 id: applicationsPage
                 when: mainTabGroup.currentTab == applicationsPage
                 source: Qt.resolvedUrl("ApplicationsView.qml")
-            }
-            PlasmaExtras.ConditionalLoader {
-                id: systemPage
-                when: mainTabGroup.currentTab == systemPage
-                source: Qt.resolvedUrl("ComputerView.qml")
-            }
-            PlasmaExtras.ConditionalLoader {
-                id: recentlyUsedPage
-                when: mainTabGroup.currentTab == recentlyUsedPage
-                source: Qt.resolvedUrl("RecentlyUsedView.qml")
-            }
-            PlasmaExtras.ConditionalLoader {
-                id: oftenUsedPage
-                when: mainTabGroup.currentTab == oftenUsedPage
-                source: Qt.resolvedUrl("OftenUsedView.qml")
-            }
-            PlasmaExtras.ConditionalLoader {
-                id: leavePage
-                when: mainTabGroup.currentTab == leavePage
-                source: Qt.resolvedUrl("LeaveView.qml")
             }
             PlasmaExtras.ConditionalLoader {
                 id: searchPage
