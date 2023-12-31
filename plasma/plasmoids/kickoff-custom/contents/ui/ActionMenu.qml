@@ -1,90 +1,143 @@
-/*
-    SPDX-FileCopyrightText: 2013 Aurélien Gâteau <agateau@kde.org>
-    SPDX-FileCopyrightText: 2014-2015 Eike Hein <hein@kde.org>
-    SPDX-FileCopyrightText: 2021 Mikel Johnson <mikel5764@gmail.com>
-    SPDX-FileCopyrightText: 2021 Noah Davis <noahadvs@gmail.com>
+/***************************************************************************
+ *   Copyright (C) 2013 by Aurélien Gâteau <agateau@kde.org>               *
+ *   Copyright (C) 2014-2015 by Eike Hein <hein@kde.org>                   *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
+ ***************************************************************************/
 
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+import QtQuick 2.0
 
-pragma Singleton // NOTE: Singletons are shared between all instances of a plasmoid
-
-import QtQuick 2.15
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.components 2.0 as PC2 // for Menu + MenuItem
-import "code/tools.js" as Tools
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Item {
     id: root
 
-    property var actionList: menu.visualParent ? menu.visualParent.actionList : null
+    property QtObject menu
+    property Item visualParent
+    property variant actionList
+    property bool opened: menu ? (menu.status !== PlasmaComponents.DialogStatus.Closed) : false
 
-    // Workaround for `plasmoid` context property not working in singletons.
-    // Only one action menu can be open at a time, so this should be safe to use.
-    property Plasmoid plasmoid: null
+    signal actionClicked(string actionId, variant actionArgument)
+    signal closed
 
-    // Not a QQC1 Menu. It's actually a custom QObject that uses a QMenu.
-    readonly property PC2.Menu menu: PC2.Menu {
-        id: menu
+    onActionListChanged: refreshMenu();
 
-        visualParent: null
-        placement: PlasmaCore.Types.BottomPosedLeftAlignedPopup
+    onOpenedChanged: {
+        if (!opened) {
+            closed();
+        }
     }
 
-    visible: false
+    function open(x, y) {
+        if (!actionList || !actionList.length) {
+            return;
+        }
 
-    Instantiator {
-        active: root.actionList !== null
-        model: root.actionList
-        delegate: menuItemComponent
-        onObjectAdded: menu.addMenuItem(object)
-        onObjectRemoved: menu.removeMenuItem(object)
+        if (x && y) {
+            menu.open(x, y);
+        } else {
+            menu.open();
+        }
     }
 
-    Component {
-        id: menuComponent
+    function refreshMenu() {
+        if (menu) {
+            menu.destroy();
+        }
 
-        PC2.Menu {}
+        if (!actionList) {
+            return;
+        }
+
+        menu = contextMenuComponent.createObject(root);
+
+        // actionList.forEach(function(actionItem) {
+        //     var item = contextMenuItemComponent.createObject(menu, {
+        //         "actionItem": actionItem,
+        //     });
+        // });
+
+        fillMenu(menu, actionList);
     }
 
-    Component {
-        id: menuItemComponent
+    function fillMenu(menu, items) {
+        items.forEach(function(actionItem) {
+            if (actionItem.subActions) {
+                // This is a menu
+                var submenuItem = contextSubmenuItemComponent.createObject(
+                                          menu, { "actionItem" : actionItem });
 
-        PC2.MenuItem {
-            id: menuItem
+                fillMenu(submenuItem.submenu, actionItem.subActions);
 
-            required property var modelData
-            property PC2.Menu subMenu: modelData.subActions
-                ? menuComponent.createObject(menuItem, { visualParent: menuItem.action })
-                : null
-
-            text: modelData.text ? modelData.text : ""
-            enabled: modelData.type !== "title" && ("enabled" in modelData ? modelData.enabled : true)
-            separator: modelData.type === "separator"
-            section: modelData.type === "title"
-            icon: modelData.icon ? modelData.icon : null
-            checkable: modelData.hasOwnProperty("checkable") ? modelData.checkable : false
-            checked: modelData.hasOwnProperty("checked") ? modelData.checked : false
-
-            Instantiator {
-                active: menuItem.subMenu !== null
-                model: modelData.subActions
-                delegate: menuItemComponent
-                onObjectAdded: subMenu.addMenuItem(object)
-                onObjectRemoved: subMenu.removeMenuItem(object)
+            } else {
+                var item = contextMenuItemComponent.createObject(
+                                menu,
+                                {
+                                    "actionItem": actionItem,
+                                }
+                );
             }
+        });
+
+    }
+
+    Component {
+        id: contextMenuComponent
+
+        PlasmaComponents.ContextMenu {
+            visualParent: root.visualParent
+        }
+    }
+
+    Component {
+        id: contextSubmenuItemComponent
+
+        PlasmaComponents.MenuItem {
+            id: submenuItem
+
+            property variant actionItem
+
+            text: actionItem.text ? actionItem.text : ""
+            icon: actionItem.icon ? actionItem.icon : null
+
+            property variant submenu : submenu_
+
+            PlasmaComponents.ContextMenu {
+                id: submenu_
+                visualParent: submenuItem.action
+            }
+        }
+    }
+
+    Component {
+        id: contextMenuItemComponent
+
+        PlasmaComponents.MenuItem {
+            property variant actionItem
+
+            text      : actionItem.text ? actionItem.text : ""
+            enabled   : actionItem.type !== "title" && ("enabled" in actionItem ? actionItem.enabled : true)
+            separator : actionItem.type === "separator"
+            section   : actionItem.type === "title"
+            icon      : actionItem.icon ? actionItem.icon : null
+            checkable : actionItem.checkable ? actionItem.checkable : false
+            checked   : actionItem.checked ? actionItem.checked : false
 
             onClicked: {
-                const modelActionTriggered = Tools.triggerAction(
-                    menu.visualParent.view.model,
-                    menu.visualParent.index,
-                    modelData.actionId,
-                    modelData.actionArgument
-                )
-                if (modelActionTriggered) {
-                    root.plasmoid.expanded = false
-                }
+                actionClicked(actionItem.actionId, actionItem.actionArgument);
             }
         }
     }

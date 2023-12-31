@@ -1,22 +1,25 @@
-/*
-    SPDX-FileCopyrightText: 2013 Aurélien Gâteau <agateau@kde.org>
-    SPDX-FileCopyrightText: 2013-2015 Eike Hein <hein@kde.org>
-    SPDX-FileCopyrightText: 2017 Ivan Cukic <ivan.cukic@kde.org>
-    SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
-
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+/***************************************************************************
+ *   Copyright (C) 2013 by Aurélien Gâteau <agateau@kde.org>               *
+ *   Copyright (C) 2013-2015 by Eike Hein <hein@kde.org>                   *
+ *   Copyright (C) 2017 by Ivan Cukic <ivan.cukic@kde.org>                 *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
+ ***************************************************************************/
 
 .pragma library
-.import org.kde.plasma.core 2.1 as PlasmaCore
-
-const defaultIconName = "start-here-kde";
-
-function iconOrDefault(formFactor, preferredIconName) {
-    // Vertical panels must have an icon, at least a default one.
-    return (formFactor === PlasmaCore.Types.Vertical && preferredIconName === "")
-        ? defaultIconName : preferredIconName;
-}
 
 function fillActionMenu(i18n, actionMenu, actionList, favoriteModel, favoriteId) {
     // Accessing actionList can be a costly operation, so we don't
@@ -24,9 +27,12 @@ function fillActionMenu(i18n, actionMenu, actionList, favoriteModel, favoriteId)
 
     var actions = createFavoriteActions(i18n, favoriteModel, favoriteId);
 
-    if (actions && actions.length > 0) {
+    if (actions) {
         if (actionList && actionList.length > 0) {
-            actionList.push({ "type": "separator" }, ...actions);
+            var separator = { "type": "separator" };
+            actionList.push(separator);
+            // actionList = actions.concat(actionList); // this crashes Qt O.o
+            actionList.push.apply(actionList, actions);
         } else {
             actionList = actions;
         }
@@ -36,7 +42,7 @@ function fillActionMenu(i18n, actionMenu, actionList, favoriteModel, favoriteId)
 }
 
 function createFavoriteActions(i18n, favoriteModel, favoriteId) {
-    if (!favoriteModel || !favoriteId || !favoriteModel.enabled) {
+    if (favoriteModel === null || !favoriteModel.enabled || favoriteId == null) {
         return null;
     }
 
@@ -49,7 +55,7 @@ function createFavoriteActions(i18n, favoriteModel, favoriteId) {
             action.text = i18n("Remove from Favorites");
             action.icon = "bookmark-remove";
             action.actionId = "_kicker_favorite_remove";
-        } else if (favoriteModel.maxFavorites === -1 || favoriteModel.count < favoriteModel.maxFavorites) {
+        } else if (favoriteModel.maxFavorites == -1 || favoriteModel.count < favoriteModel.maxFavorites) {
             action.text = i18n("Add to Favorites");
             action.icon = "bookmark-new";
             action.actionId = "_kicker_favorite_add";
@@ -78,8 +84,8 @@ function createFavoriteActions(i18n, favoriteModel, favoriteId) {
             checkable : true,
 
             actionId  : linkedToAllActivities ?
-                            "_kicker_favorite_remove_from_activity" :
-                            "_kicker_favorite_set_to_activity",
+                             "_kicker_favorite_remove_from_activity" :
+                             "_kicker_favorite_set_to_activity",
             checked   : linkedToAllActivities,
 
             actionArgument : {
@@ -168,19 +174,29 @@ function handleFavoriteAction(actionId, actionArgument) {
     var favoriteId = actionArgument.favoriteId;
     var favoriteModel = actionArgument.favoriteModel;
 
-    if (favoriteModel === null || favoriteId === null) {
+    console.log(actionId);
+
+    if (favoriteModel === null || favoriteId == null) {
         return null;
     }
 
-    if (actionId === "_kicker_favorite_remove") {
+    if (actionId == "_kicker_favorite_remove") {
+        console.log("Removing from all activities");
         favoriteModel.removeFavorite(favoriteId);
-    } else if (actionId === "_kicker_favorite_add") {
+    } else if (actionId == "_kicker_favorite_add") {
+        console.log("Adding to global activity");
         favoriteModel.addFavorite(favoriteId);
-    } else if (actionId === "_kicker_favorite_remove_from_activity") {
+    } else if (actionId == "_kicker_favorite_remove_from_activity") {
+        console.log("Removing from a specific activity");
         favoriteModel.removeFavoriteFrom(favoriteId, actionArgument.favoriteActivity);
-    } else if (actionId === "_kicker_favorite_add_to_activity") {
+
+    } else if (actionId == "_kicker_favorite_add_to_activity") {
+        console.log("Adding to another activity");
         favoriteModel.addFavoriteTo(favoriteId, actionArgument.favoriteActivity);
-    } else if (actionId === "_kicker_favorite_set_to_activity") {
+
+    } else if (actionId == "_kicker_favorite_set_to_activity") {
+        console.log("Removing the item from the favourites, and re-adding it just to be on a specific activity");
         favoriteModel.setFavoriteOn(favoriteId, actionArgument.favoriteActivity);
+
     }
 }
