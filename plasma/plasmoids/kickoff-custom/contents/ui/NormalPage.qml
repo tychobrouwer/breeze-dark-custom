@@ -15,12 +15,8 @@ EmptyPage {
     contentItem: HorizontalStackView {
         id: stackView
         focus: true
-        reverseTransitions: footer.tabBar.currentIndex === 1
         initialItem: ApplicationsPage {
             id: applicationsPage
-        }
-        Connections {
-            target: footer.tabBar
         }
     }
 

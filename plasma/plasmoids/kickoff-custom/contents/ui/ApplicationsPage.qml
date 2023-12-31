@@ -50,7 +50,7 @@ BasePage {
             }
         }
 
-        property int appsModelRow: 1
+        property int appsModelRow: 2
         readonly property Kicker.AppsModel appsModel: plasmoid.rootItem.rootModel.modelForRow(appsModelRow)
         focus: true
         initialItem: applicationsSectionViewComponent
