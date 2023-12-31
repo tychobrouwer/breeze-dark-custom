@@ -15,6 +15,7 @@ EmptyPage {
     contentItem: HorizontalStackView {
         id: stackView
         focus: true
+        reverseTransitions: true
         initialItem: ApplicationsPage {
             id: applicationsPage
         }
