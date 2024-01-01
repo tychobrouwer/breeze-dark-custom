@@ -9,7 +9,7 @@
         "Category": "",
         "Description": "Breeze Dark by the KDE VDG Customized",
         "EnabledByDefault": true,
-        "Id": "breeze-dark",
+        "Id": "breeze-dark-custom",
         "License": "LGPL",
         "Name": "Breeze Dark Custom",
         "Version": "5.112.0",
